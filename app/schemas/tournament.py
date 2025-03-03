@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Optional, List
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -34,4 +34,4 @@ class Tournament(TournamentBase):
     id: int
 
     class Config:
-        from_attributes = True  # For SQLAlchemy models compatibility 
+        from_attributes = True  # For SQLAlchemy models compatibility

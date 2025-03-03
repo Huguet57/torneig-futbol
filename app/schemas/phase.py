@@ -1,4 +1,4 @@
-from typing import Optional, List, Literal
+from typing import Optional, Literal
 
 from pydantic import BaseModel
 
@@ -32,4 +32,4 @@ class Phase(PhaseBase):
     tournament_id: int
 
     class Config:
-        from_attributes = True  # For SQLAlchemy models compatibility 
+        from_attributes = True  # For SQLAlchemy models compatibility

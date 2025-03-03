@@ -13,11 +13,7 @@ crud = CRUDBase[GroupModel, GroupCreate, GroupUpdate](GroupModel)
 
 
 @router.get("/", response_model=List[Group])
-def get_groups(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db)
-):
+def get_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve all groups.
     """
@@ -25,10 +21,7 @@ def get_groups(
 
 
 @router.post("/", response_model=Group)
-def create_group(
-    group: GroupCreate,
-    db: Session = Depends(get_db)
-):
+def create_group(group: GroupCreate, db: Session = Depends(get_db)):
     """
     Create a new group.
     """
@@ -36,29 +29,27 @@ def create_group(
 
 
 @router.get("/{group_id}", response_model=Group)
-def get_group(
-    group_id: int,
-    db: Session = Depends(get_db)
-):
+def get_group(group_id: int, db: Session = Depends(get_db)):
     """
     Get a specific group by ID.
     """
-    db_group = db.query(GroupModel).filter(GroupModel.id == group_id).options(
-        # Include the teams relationship
-        joinedload(GroupModel.teams)
-    ).first()
-    
+    db_group = (
+        db.query(GroupModel)
+        .filter(GroupModel.id == group_id)
+        .options(
+            # Include the teams relationship
+            joinedload(GroupModel.teams)
+        )
+        .first()
+    )
+
     if db_group is None:
         raise HTTPException(status_code=404, detail="Group not found")
     return db_group
 
 
 @router.put("/{group_id}", response_model=Group)
-def update_group(
-    group_id: int,
-    group: GroupUpdate,
-    db: Session = Depends(get_db)
-):
+def update_group(group_id: int, group: GroupUpdate, db: Session = Depends(get_db)):
     """
     Update a group.
     """
@@ -69,10 +60,7 @@ def update_group(
 
 
 @router.delete("/{group_id}", response_model=Group)
-def delete_group(
-    group_id: int,
-    db: Session = Depends(get_db)
-):
+def delete_group(group_id: int, db: Session = Depends(get_db)):
     """
     Delete a group.
     """
@@ -81,16 +69,17 @@ def delete_group(
 
 @router.post("/{group_id}/teams", response_model=Group)
 def add_team_to_group(
-    group_id: int,
-    team_data: TeamToGroup,
-    db: Session = Depends(get_db)
+    group_id: int, team_data: TeamToGroup, db: Session = Depends(get_db)
 ):
     """
     Add a team to a group.
     """
-    db_group = db.query(GroupModel).filter(GroupModel.id == group_id).options(
-        joinedload(GroupModel.teams)
-    ).first()
+    db_group = (
+        db.query(GroupModel)
+        .filter(GroupModel.id == group_id)
+        .options(joinedload(GroupModel.teams))
+        .first()
+    )
     if db_group is None:
         raise HTTPException(status_code=404, detail="Group not found")
 
@@ -105,17 +94,16 @@ def add_team_to_group(
 
 
 @router.delete("/{group_id}/teams/{team_id}", response_model=Group)
-def remove_team_from_group(
-    group_id: int,
-    team_id: int,
-    db: Session = Depends(get_db)
-):
+def remove_team_from_group(group_id: int, team_id: int, db: Session = Depends(get_db)):
     """
     Remove a team from a group.
     """
-    db_group = db.query(GroupModel).filter(GroupModel.id == group_id).options(
-        joinedload(GroupModel.teams)
-    ).first()
+    db_group = (
+        db.query(GroupModel)
+        .filter(GroupModel.id == group_id)
+        .options(joinedload(GroupModel.teams))
+        .first()
+    )
     if db_group is None:
         raise HTTPException(status_code=404, detail="Group not found")
 
@@ -129,4 +117,4 @@ def remove_team_from_group(
     db_group.teams.remove(db_team)
     db.commit()
     db.refresh(db_group)
-    return db_group 
+    return db_group

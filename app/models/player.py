@@ -15,4 +15,4 @@ class Player(Base):
     is_goalkeeper = Column(Boolean, default=False)
 
     # Relationships
-    team = relationship("Team", back_populates="players") 
+    team = relationship("Team", back_populates="players")

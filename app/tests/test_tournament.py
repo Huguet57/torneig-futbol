@@ -1,6 +1,3 @@
-import json
-from datetime import date
-
 from app.tests.fixtures import create_test_tournament
 
 
@@ -13,7 +10,7 @@ def test_create_tournament(client):
         "start_date": "2024-06-01",
         "end_date": "2024-06-30",
         "description": "A new test tournament",
-        "logo_url": None
+        "logo_url": None,
     }
     response = client.post("/api/tournaments/", json=tournament_data)
     assert response.status_code == 200
@@ -39,7 +36,7 @@ def test_get_tournaments(client, db):
     # Create some test tournaments
     create_test_tournament(db)
     create_test_tournament(db)
-    
+
     response = client.get("/api/tournaments/")
     assert response.status_code == 200
     data = response.json()
@@ -49,9 +46,7 @@ def test_get_tournaments(client, db):
 def test_update_tournament(client, db):
     """Test updating a tournament."""
     tournament = create_test_tournament(db)
-    update_data = {
-        "name": "Updated Tournament Name"
-    }
+    update_data = {"name": "Updated Tournament Name"}
     response = client.put(f"/api/tournaments/{tournament.id}", json=update_data)
     assert response.status_code == 200
     data = response.json()
@@ -65,7 +60,7 @@ def test_delete_tournament(client, db):
     tournament = create_test_tournament(db)
     response = client.delete(f"/api/tournaments/{tournament.id}")
     assert response.status_code == 200
-    
+
     # Verify it's gone
     response = client.get(f"/api/tournaments/{tournament.id}")
-    assert response.status_code == 404 
+    assert response.status_code == 404

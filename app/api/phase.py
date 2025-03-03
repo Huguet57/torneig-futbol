@@ -12,11 +12,7 @@ crud = CRUDBase[PhaseModel, PhaseCreate, PhaseUpdate](PhaseModel)
 
 
 @router.get("/", response_model=List[Phase])
-def get_phases(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db)
-):
+def get_phases(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve all phases.
     """
@@ -24,10 +20,7 @@ def get_phases(
 
 
 @router.post("/", response_model=Phase)
-def create_phase(
-    phase: PhaseCreate,
-    db: Session = Depends(get_db)
-):
+def create_phase(phase: PhaseCreate, db: Session = Depends(get_db)):
     """
     Create a new phase.
     """
@@ -35,10 +28,7 @@ def create_phase(
 
 
 @router.get("/{phase_id}", response_model=Phase)
-def get_phase(
-    phase_id: int,
-    db: Session = Depends(get_db)
-):
+def get_phase(phase_id: int, db: Session = Depends(get_db)):
     """
     Get a specific phase by ID.
     """
@@ -49,11 +39,7 @@ def get_phase(
 
 
 @router.put("/{phase_id}", response_model=Phase)
-def update_phase(
-    phase_id: int,
-    phase: PhaseUpdate,
-    db: Session = Depends(get_db)
-):
+def update_phase(phase_id: int, phase: PhaseUpdate, db: Session = Depends(get_db)):
     """
     Update a phase.
     """
@@ -64,11 +50,8 @@ def update_phase(
 
 
 @router.delete("/{phase_id}", response_model=Phase)
-def delete_phase(
-    phase_id: int,
-    db: Session = Depends(get_db)
-):
+def delete_phase(phase_id: int, db: Session = Depends(get_db)):
     """
     Delete a phase.
     """
-    return crud.delete(db, id=phase_id) 
+    return crud.delete(db, id=phase_id)

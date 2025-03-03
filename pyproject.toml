@@ -16,9 +16,9 @@ python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 python-multipart = "^0.0.9"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 jinja2 = "^3.1.2"
+ruff = "^0.9.9"
 
 [tool.poetry.dev-dependencies]
-ruff = "*"
 pytest = "^7.4.3"
 pytest-cov = "^4.1.0"
 httpx = "^0.26.0"
@@ -26,11 +26,4 @@ pre-commit = "^3.5.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.ruff]
-line-length = 88
-
-[tool.ruff.lint]
-select = ["E", "F", "W"]
-ignore = ["E501"] 
+build-backend = "poetry.core.masonry.api" 

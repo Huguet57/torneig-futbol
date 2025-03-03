@@ -15,7 +15,7 @@ def create_test_tournament(db):
         start_date=date(2023, 6, 1),
         end_date=date(2023, 6, 30),
         description="Test tournament for unit tests",
-        logo_url=None
+        logo_url=None,
     )
     db.add(tournament)
     db.commit()
@@ -30,7 +30,7 @@ def create_test_team(db):
         short_name="TEST",
         logo_url=None,
         city="Test City",
-        colors="Red/White"
+        colors="Red/White",
     )
     db.add(team)
     db.commit()
@@ -41,10 +41,7 @@ def create_test_team(db):
 def create_test_phase(db, tournament_id):
     """Create a test phase"""
     phase = Phase(
-        tournament_id=tournament_id,
-        name="Group Phase",
-        order=1,
-        type="group"
+        tournament_id=tournament_id, name="Group Phase", order=1, type="group"
     )
     db.add(phase)
     db.commit()
@@ -54,10 +51,7 @@ def create_test_phase(db, tournament_id):
 
 def create_test_group(db, phase_id):
     """Create a test group"""
-    group = Group(
-        phase_id=phase_id,
-        name="Group A"
-    )
+    group = Group(phase_id=phase_id, name="Group A")
     db.add(group)
     db.commit()
     db.refresh(group)
@@ -71,7 +65,7 @@ def create_test_player(db, team_id):
         name="John Doe",
         number=10,
         position="Forward",
-        is_goalkeeper=False
+        is_goalkeeper=False,
     )
     db.add(player)
     db.commit()
@@ -84,4 +78,4 @@ def add_team_to_group(db, team, group):
     group.teams.append(team)
     db.commit()
     db.refresh(group)
-    return group 
+    return group

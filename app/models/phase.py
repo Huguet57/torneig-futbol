@@ -16,4 +16,6 @@ class Phase(Base):
     # Relationships
     tournament = relationship("Tournament", back_populates="phases")
     groups = relationship("Group", back_populates="phase", cascade="all, delete-orphan")
-    matches = relationship("Match", back_populates="phase", cascade="all, delete-orphan") 
+    matches = relationship(
+        "Match", back_populates="phase", cascade="all, delete-orphan"
+    )

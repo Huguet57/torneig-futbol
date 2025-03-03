@@ -19,7 +19,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 def db():
     # Create the database tables
     Base.metadata.create_all(bind=engine)
-    
+
     # Create a new session for each test
     db = TestingSessionLocal()
     try:
@@ -38,11 +38,11 @@ def client(db):
             yield db
         finally:
             db.close()
-    
+
     app.dependency_overrides[get_db] = override_get_db
-    
+
     with TestClient(app) as c:
         yield c
-    
+
     # Remove the override after the test
-    app.dependency_overrides.clear() 
+    app.dependency_overrides.clear()

@@ -22,9 +22,7 @@ class Group(Base):
 
     # Relationships
     phase = relationship("Phase", back_populates="groups")
-    teams = relationship(
-        "Team",
-        secondary=team_group,
-        back_populates="groups"
+    teams = relationship("Team", secondary=team_group, back_populates="groups")
+    matches = relationship(
+        "Match", back_populates="group", cascade="all, delete-orphan"
     )
-    matches = relationship("Match", back_populates="group", cascade="all, delete-orphan") 

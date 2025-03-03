@@ -33,7 +33,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             db.rollback()
             raise HTTPException(status_code=400, detail=str(e))
 
-    def update(self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
+    def update(
+        self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType
+    ) -> ModelType:
         try:
             obj_data = obj_in.model_dump(exclude_unset=True)
             for field, value in obj_data.items():
@@ -56,4 +58,4 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             return obj
         except IntegrityError as e:
             db.rollback()
-            raise HTTPException(status_code=400, detail=str(e)) 
+            raise HTTPException(status_code=400, detail=str(e))

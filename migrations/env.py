@@ -14,7 +14,6 @@ fileConfig(config.config_file_name)
 
 # Add the models to be included in migrations
 import sys
-import os
 from pathlib import Path
 
 # Add the parent directory to the path so we can import from app
@@ -22,12 +21,6 @@ parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
 
 from app.db.database import Base
-from app.models.tournament import Tournament
-from app.models.team import Team
-from app.models.phase import Phase
-from app.models.group import Group
-from app.models.player import Player
-from app.models.match import Match
 
 # This is the MetaData object used by Alembic for migrations
 target_metadata = Base.metadata
@@ -71,9 +64,7 @@ def run_migrations_online():
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
@@ -82,4 +73,4 @@ def run_migrations_online():
 if context.is_offline_mode():
     run_migrations_offline()
 else:
-    run_migrations_online() 
+    run_migrations_online()

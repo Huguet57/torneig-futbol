@@ -1,6 +1,32 @@
 # Linting Guide for Soccer Tournament Management System
 
-This project uses [Ruff](https://github.com/astral-sh/ruff) for linting and formatting Python code. Ruff is a fast Python linter written in Rust that can replace multiple Python linting tools like flake8, isort, and more.
+**Note: Ruff has been removed from this project. This document is kept for reference purposes only.**
+
+Previously, this project used [Ruff](https://github.com/astral-sh/ruff) for linting and formatting Python code.
+
+## Alternative Linting Options
+
+If you want to add linting to this project, consider:
+
+1. **flake8** - A popular Python linter
+   ```bash
+   poetry add flake8 --group dev
+   ```
+
+2. **black** - A code formatter
+   ```bash
+   poetry add black --group dev
+   ```
+
+3. **isort** - Import sorter
+   ```bash
+   poetry add isort --group dev
+   ```
+
+4. **Reinstalling Ruff**
+   ```bash
+   poetry add ruff --group dev
+   ```
 
 ## Setup
 

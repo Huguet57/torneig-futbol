@@ -1,5 +1,3 @@
-import json
-
 from app.tests.fixtures import create_test_team
 
 
@@ -10,7 +8,7 @@ def test_create_team(client):
         "short_name": "NTT",
         "city": "New City",
         "colors": "Blue/Green",
-        "logo_url": None
+        "logo_url": None,
     }
     response = client.post("/api/teams/", json=team_data)
     assert response.status_code == 200
@@ -36,7 +34,7 @@ def test_get_teams(client, db):
     # Create some test teams
     create_test_team(db)
     create_test_team(db)
-    
+
     response = client.get("/api/teams/")
     assert response.status_code == 200
     data = response.json()
@@ -46,9 +44,7 @@ def test_get_teams(client, db):
 def test_update_team(client, db):
     """Test updating a team."""
     team = create_test_team(db)
-    update_data = {
-        "name": "Updated Team Name"
-    }
+    update_data = {"name": "Updated Team Name"}
     response = client.put(f"/api/teams/{team.id}", json=update_data)
     assert response.status_code == 200
     data = response.json()
@@ -62,7 +58,7 @@ def test_delete_team(client, db):
     team = create_test_team(db)
     response = client.delete(f"/api/teams/{team.id}")
     assert response.status_code == 200
-    
+
     # Verify it's gone
     response = client.get(f"/api/teams/{team.id}")
-    assert response.status_code == 404 
+    assert response.status_code == 404

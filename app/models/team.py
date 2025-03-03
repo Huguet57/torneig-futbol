@@ -15,10 +15,8 @@ class Team(Base):
     colors = Column(String, nullable=True)
 
     # Relationships
-    players = relationship("Player", back_populates="team", cascade="all, delete-orphan")
+    players = relationship(
+        "Player", back_populates="team", cascade="all, delete-orphan"
+    )
     # For many-to-many relationship with groups through team_group association table
-    groups = relationship(
-        "Group",
-        secondary="team_group",
-        back_populates="teams"
-    ) 
+    groups = relationship("Group", secondary="team_group", back_populates="teams")

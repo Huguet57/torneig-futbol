@@ -18,11 +18,14 @@ class Match(Base):
     location = Column(String, nullable=True)
     home_score = Column(Integer, nullable=True)
     away_score = Column(Integer, nullable=True)
-    status = Column(Enum("scheduled", "in-progress", "completed", name="match_status"), default="scheduled")
+    status = Column(
+        Enum("scheduled", "in-progress", "completed", name="match_status"),
+        default="scheduled",
+    )
 
     # Relationships
     tournament = relationship("Tournament", back_populates="matches")
     phase = relationship("Phase", back_populates="matches")
     group = relationship("Group", back_populates="matches")
     home_team = relationship("Team", foreign_keys=[home_team_id])
-    away_team = relationship("Team", foreign_keys=[away_team_id]) 
+    away_team = relationship("Team", foreign_keys=[away_team_id])

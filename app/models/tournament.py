@@ -17,5 +17,9 @@ class Tournament(Base):
     logo_url = Column(String, nullable=True)
 
     # Relationships
-    phases = relationship("Phase", back_populates="tournament", cascade="all, delete-orphan")
-    matches = relationship("Match", back_populates="tournament", cascade="all, delete-orphan") 
+    phases = relationship(
+        "Phase", back_populates="tournament", cascade="all, delete-orphan"
+    )
+    matches = relationship(
+        "Match", back_populates="tournament", cascade="all, delete-orphan"
+    )

@@ -1,7 +1,6 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from pathlib import Path
 
 from app.api import tournament, team, phase, group
@@ -10,7 +9,7 @@ from app.ui import ui_router
 app = FastAPI(
     title="Soccer Tournament Management System",
     description="API for managing soccer tournaments, teams, and matches",
-    version="0.1.0"
+    version="0.1.0",
 )
 
 # CORS middleware configuration
@@ -42,5 +41,5 @@ async def root():
     return {
         "message": "Welcome to the Soccer Tournament Management System API",
         "docs_url": "/docs",
-        "redoc_url": "/redoc"
-    } 
+        "redoc_url": "/redoc",
+    }

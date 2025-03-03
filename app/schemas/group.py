@@ -23,7 +23,7 @@ class TeamInGroup(BaseModel):
     id: int
     name: str
     short_name: str
-    
+
     class Config:
         from_attributes = True
 
@@ -40,4 +40,4 @@ class Group(GroupBase):
 
 # Model for adding a team to a group
 class TeamToGroup(BaseModel):
-    team_id: int 
+    team_id: int

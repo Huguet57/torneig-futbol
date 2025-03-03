@@ -12,11 +12,7 @@ crud = CRUDBase[TeamModel, TeamCreate, TeamUpdate](TeamModel)
 
 
 @router.get("/", response_model=List[Team])
-def get_teams(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db)
-):
+def get_teams(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve all teams.
     """
@@ -24,10 +20,7 @@ def get_teams(
 
 
 @router.post("/", response_model=Team)
-def create_team(
-    team: TeamCreate,
-    db: Session = Depends(get_db)
-):
+def create_team(team: TeamCreate, db: Session = Depends(get_db)):
     """
     Create a new team.
     """
@@ -35,10 +28,7 @@ def create_team(
 
 
 @router.get("/{team_id}", response_model=Team)
-def get_team(
-    team_id: int,
-    db: Session = Depends(get_db)
-):
+def get_team(team_id: int, db: Session = Depends(get_db)):
     """
     Get a specific team by ID.
     """
@@ -49,11 +39,7 @@ def get_team(
 
 
 @router.put("/{team_id}", response_model=Team)
-def update_team(
-    team_id: int,
-    team: TeamUpdate,
-    db: Session = Depends(get_db)
-):
+def update_team(team_id: int, team: TeamUpdate, db: Session = Depends(get_db)):
     """
     Update a team.
     """
@@ -64,11 +50,8 @@ def update_team(
 
 
 @router.delete("/{team_id}", response_model=Team)
-def delete_team(
-    team_id: int,
-    db: Session = Depends(get_db)
-):
+def delete_team(team_id: int, db: Session = Depends(get_db)):
     """
     Delete a team.
     """
-    return crud.delete(db, id=team_id) 
+    return crud.delete(db, id=team_id)

@@ -12,11 +12,7 @@ crud = CRUDBase[TournamentModel, TournamentCreate, TournamentUpdate](TournamentM
 
 
 @router.get("/", response_model=List[Tournament])
-def get_tournaments(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db)
-):
+def get_tournaments(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve all tournaments.
     """
@@ -24,10 +20,7 @@ def get_tournaments(
 
 
 @router.post("/", response_model=Tournament)
-def create_tournament(
-    tournament: TournamentCreate,
-    db: Session = Depends(get_db)
-):
+def create_tournament(tournament: TournamentCreate, db: Session = Depends(get_db)):
     """
     Create a new tournament.
     """
@@ -35,10 +28,7 @@ def create_tournament(
 
 
 @router.get("/{tournament_id}", response_model=Tournament)
-def get_tournament(
-    tournament_id: int,
-    db: Session = Depends(get_db)
-):
+def get_tournament(tournament_id: int, db: Session = Depends(get_db)):
     """
     Get a specific tournament by ID.
     """
@@ -50,9 +40,7 @@ def get_tournament(
 
 @router.put("/{tournament_id}", response_model=Tournament)
 def update_tournament(
-    tournament_id: int,
-    tournament: TournamentUpdate,
-    db: Session = Depends(get_db)
+    tournament_id: int, tournament: TournamentUpdate, db: Session = Depends(get_db)
 ):
     """
     Update a tournament.
@@ -64,11 +52,8 @@ def update_tournament(
 
 
 @router.delete("/{tournament_id}", response_model=Tournament)
-def delete_tournament(
-    tournament_id: int,
-    db: Session = Depends(get_db)
-):
+def delete_tournament(tournament_id: int, db: Session = Depends(get_db)):
     """
     Delete a tournament.
     """
-    return crud.delete(db, id=tournament_id) 
+    return crud.delete(db, id=tournament_id)
