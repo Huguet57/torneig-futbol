@@ -21,7 +21,7 @@ from pathlib import Path
 parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
 
-from app.models import Base
+from app.db.database import Base
 from app.models.tournament import Tournament
 from app.models.team import Team
 from app.models.phase import Phase
