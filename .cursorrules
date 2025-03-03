@@ -23,6 +23,8 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Document code quality practices in a separate file for better onboarding
 - Address linting issues incrementally, starting with auto-fixable ones
 - Pay attention to SQLAlchemy and Pydantic deprecation warnings to future-proof the codebase
+- The simpler the implementation, the better
+- Always develop a module and add the tests just after. Don't add several modules that can be filled with errors
 
 ## Cursor learned
 
@@ -32,41 +34,68 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Even with correct poetry package configuration (packages = [{include = "package", from="src"}]), tests may need PYTHONPATH to include the project root to find the package
 - When creating architectural plans, always include testing strategy and iterative development approach with feedback cycles
 - Break down large documentation into separate files for better organization and easier reference
+- In SQLAlchemy, joinedload is imported from sqlalchemy.orm and not a method of the Session object. Always import it separately: from sqlalchemy.orm import joinedload
+- When writing APIs that return related objects, use joinedload to eagerly load relationships to avoid N+1 query issues and ensure related objects are included in responses
 
 # Scratchpad
 
 ## Soccer Tournament Management System
 
-Current task: Create a plan for a soccer tournament management system
+Current task: Implementing MVP 1 - Tournament and Team Structure
 
-[X] Create initial README.md with architecture plan
-[X] Update plan with testing strategy and MVP iterations
-[X] Reorganize documentation into separate files:
-   - README.md (overview)
-   - docs/api.md (API definitions)
-   - docs/implementation.md (database & tech stack)
-   - docs/development_approach.md (MVP cycles & testing)
-[ ] Wait for user approval before beginning implementation
-[ ] Set up project structure when approved
-[ ] Set up database schema and models
-[ ] Implement API endpoints
-[ ] Add business logic for tournament management
+[X] Set up project structure
+  [X] Create directory structure
+  [X] Configure Poetry dependencies
+  [X] Set up Ruff linting
 
-MVP Iteration Plan:
-- MVP 1: Tournament and team structure (Week 1-2)
-- MVP 2: Match management (Week 3-4)
-- MVP 3: Statistics and reporting (Week 5-6)
-- MVP 4: Advanced features (Week 7-8)
-- MVP 5: Refinement and polish (Week 9-10)
+[X] Set up database models
+  [X] Create base database configuration
+  [X] Implement Tournament model
+  [X] Implement Team model
+  [X] Implement Phase model
+  [X] Implement Group model
+  [X] Implement Player model (basic)
+  [X] Implement Match model (basic)
 
-Testing Strategy:
-- Unit testing with pytest
-- Integration testing for workflows
-- CI/CD integration
+[X] Create API endpoints
+  [X] Create base CRUD operations class
+  [X] Implement Tournament endpoints
+  [X] Implement Team endpoints
+  [X] Implement Phase endpoints
+  [X] Implement Group endpoints with team assignment
+
+[X] Add unit tests
+  [X] Set up test configuration
+  [X] Create test fixtures
+  [X] Test Tournament API endpoints
+  [X] Test Team API endpoints
+  [X] Test Group-Team relationships
+  [X] Fix failing tests in group-team relationship
+
+[X] Database migrations
+  [X] Create Alembic configuration
+  [X] Set up migration environment
+
+[X] Add simple UI
+  [X] Create base templates
+  [X] Implement tournament management UI
+  [X] Add CSS styling
+
+[ ] Documentation
+  [ ] Add API endpoint documentation
+  [ ] Add database schema documentation
+  [ ] Add setup instructions
+
+Next steps:
+1. Complete the UI for teams, phases, and groups
+2. Generate initial database migration
+3. Add more comprehensive tests
+4. Add detailed API documentation
 
 Notes:
-- The system needs to handle multiple tournament phases (group, gold, silver)
-- Teams are organized in groups with standings calculations
-- Match scheduling and results tracking are core features
-- Player and team statistics need to be maintained
-- Based on images, the system should display standings tables, match calendars, and player/team rankings
+- Core models and API endpoints are now in place
+- Basic UI is implemented for tournament management
+- Unit tests are in place for core functionality and all tests are passing
+- Fixed issue with joinedload in group API endpoints
+- Database migrations are configured with Alembic
+- Need to complete UI for other entities and add more tests

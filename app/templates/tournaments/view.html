@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tournament.name }} - Tournament Details{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>{{ tournament.name }} ({{ tournament.edition }})</h2>
+    </div>
+    <div class="card-content">
+        <div class="tournament-details">
+            <p><strong>Year:</strong> {{ tournament.year }}</p>
+            <p><strong>Dates:</strong> {{ tournament.start_date }} to {{ tournament.end_date }}</p>
+            
+            {% if tournament.description %}
+            <p><strong>Description:</strong> {{ tournament.description }}</p>
+            {% endif %}
+            
+            {% if tournament.logo_url %}
+            <div class="tournament-logo">
+                <img src="{{ tournament.logo_url }}" alt="{{ tournament.name }} Logo">
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="tournament-actions">
+            <a href="/tournaments/{{ tournament.id }}/edit" class="btn btn-warning">Edit Tournament</a>
+            <a href="/tournaments/{{ tournament.id }}/delete" class="btn btn-danger">Delete Tournament</a>
+        </div>
+        
+        <h3>Phases</h3>
+        {% if phases %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Order</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for phase in phases %}
+                <tr>
+                    <td>{{ phase.id }}</td>
+                    <td>{{ phase.name }}</td>
+                    <td>{{ phase.order }}</td>
+                    <td>{{ phase.type }}</td>
+                    <td>
+                        <a href="/phases/{{ phase.id }}" class="btn">View</a>
+                        <a href="/phases/{{ phase.id }}/edit" class="btn btn-warning">Edit</a>
+                        <a href="/phases/{{ phase.id }}/delete" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No phases found for this tournament.</p>
+        {% endif %}
+        
+        <div class="phase-actions">
+            <a href="/phases/create?tournament_id={{ tournament.id }}" class="btn btn-success">Add Phase</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,19 @@
+Generic single-database configuration with an async dbapi.
+
+This is a simple migrations management system for the Soccer Tournament Management System.
+
+To create a new migration:
+```
+alembic revision --autogenerate -m "Description of changes"
+```
+
+To upgrade to the latest migration:
+```
+alembic upgrade head
+```
+
+To downgrade to a previous migration:
+```
+alembic downgrade -1  # Go back one revision
+alembic downgrade <revision>  # Go back to a specific revision
+``` 

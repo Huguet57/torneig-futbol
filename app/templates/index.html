@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Soccer Tournament Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Welcome to the Soccer Tournament Management System</h2>
+    </div>
+    <div class="card-content">
+        <p>This system helps you manage soccer tournaments, teams, and matches.</p>
+        
+        <h3>Quick Links</h3>
+        <div class="quick-links">
+            <a href="/tournaments" class="btn">Manage Tournaments</a>
+            <a href="/teams" class="btn">Manage Teams</a>
+            <a href="/phases" class="btn">Manage Phases</a>
+            <a href="/groups" class="btn">Manage Groups</a>
+        </div>
+        
+        <h3>System Statistics</h3>
+        <div class="stats">
+            <div class="stat-item">
+                <strong>Tournaments:</strong> {{ stats.tournaments }}
+            </div>
+            <div class="stat-item">
+                <strong>Teams:</strong> {{ stats.teams }}
+            </div>
+            <div class="stat-item">
+                <strong>Phases:</strong> {{ stats.phases }}
+            </div>
+            <div class="stat-item">
+                <strong>Groups:</strong> {{ stats.groups }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
