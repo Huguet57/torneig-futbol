@@ -1,0 +1,66 @@
+# Instructions
+
+During you interaction with the user, if you find anything reusable in this project (e.g. version of a library, model name), especially about a fix to a mistake you made or a correction you received, you should take note in the `Lessons` section in the `.cursorrules` file so you will not make the same mistake again.
+
+You should also use the `.cursorrules` file as a scratchpad to organize your thoughts. Especially when you receive a new task, you should first review the content of the scratchpad, clear old different task if necessary, first explain the task, and plan the steps you need to take to complete the task. You can use todo markers to indicate the progress, e.g.
+[X] Task 1
+[ ] Task 2
+
+Also update the progress of the task in the Scratchpad when you finish a subtask.
+Especially when you finished a milestone, it will help to improve your depth of task accomplishment to use the scratchpad to reflect and plan.
+The goal is to help you maintain a big picture as well as the progress of the task. Always refer to the Scratchpad when you plan the next step.
+
+# Lessons
+
+## User Specified Lessons
+
+- Use poetry to run tests or anything python related.
+- Include info useful for debugging in the program output.
+- Read the file before you try to edit it.
+
+## Cursor learned
+
+- For search results, ensure proper handling of different character encodings (UTF-8) for international queries
+- Add debug information to stderr while keeping the main output clean in stdout for better pipeline integration
+- When running tests, make sure PYTHONPATH includes the source directory to resolve imports correctly
+- Even with correct poetry package configuration (packages = [{include = "package", from="src"}]), tests may need PYTHONPATH to include the project root to find the package
+- When creating architectural plans, always include testing strategy and iterative development approach with feedback cycles
+- Break down large documentation into separate files for better organization and easier reference
+
+# Scratchpad
+
+## Soccer Tournament Management System
+
+Current task: Create a plan for a soccer tournament management system
+
+[X] Create initial README.md with architecture plan
+[X] Update plan with testing strategy and MVP iterations
+[X] Reorganize documentation into separate files:
+   - README.md (overview)
+   - docs/api.md (API definitions)
+   - docs/implementation.md (database & tech stack)
+   - docs/development_approach.md (MVP cycles & testing)
+[ ] Wait for user approval before beginning implementation
+[ ] Set up project structure when approved
+[ ] Set up database schema and models
+[ ] Implement API endpoints
+[ ] Add business logic for tournament management
+
+MVP Iteration Plan:
+- MVP 1: Tournament and team structure (Week 1-2)
+- MVP 2: Match management (Week 3-4)
+- MVP 3: Statistics and reporting (Week 5-6)
+- MVP 4: Advanced features (Week 7-8)
+- MVP 5: Refinement and polish (Week 9-10)
+
+Testing Strategy:
+- Unit testing with pytest
+- Integration testing for workflows
+- CI/CD integration
+
+Notes:
+- The system needs to handle multiple tournament phases (group, gold, silver)
+- Teams are organized in groups with standings calculations
+- Match scheduling and results tracking are core features
+- Player and team statistics need to be maintained
+- Based on images, the system should display standings tables, match calendars, and player/team rankings
