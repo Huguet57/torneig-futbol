@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 
 from app.db.database import get_db
 from app.models.team import Team as TeamModel
+from app.models.player import Player as PlayerModel
 from app.schemas.team import Team, TeamCreate, TeamUpdate
+from app.schemas.player import Player, PlayerCreate
 from app.api.crud_base import CRUDBase
 
 router = APIRouter()
@@ -55,3 +57,39 @@ def delete_team(team_id: int, db: Session = Depends(get_db)):
     Delete a team.
     """
     return crud.delete(db, id=team_id)
+
+
+@router.post("/{team_id}/players/", response_model=Player)
+def create_team_player(team_id: int, player: PlayerCreate, db: Session = Depends(get_db)):
+    """
+    Create a new player for a specific team.
+    """
+    db_team = crud.get(db, id=team_id)
+    if db_team is None:
+        raise HTTPException(status_code=404, detail="Team not found")
+    
+    # Create player with the team_id
+    db_player = PlayerModel(
+        team_id=team_id,
+        name=player.name,
+        number=player.number,
+        position=player.position,
+        is_goalkeeper=player.is_goalkeeper
+    )
+    db.add(db_player)
+    db.commit()
+    db.refresh(db_player)
+    return db_player
+
+
+@router.get("/{team_id}/players/", response_model=List[Player])
+def get_team_players(team_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """
+    Get all players for a specific team.
+    """
+    db_team = crud.get(db, id=team_id)
+    if db_team is None:
+        raise HTTPException(status_code=404, detail="Team not found")
+    
+    players = db.query(PlayerModel).filter(PlayerModel.team_id == team_id).offset(skip).limit(limit).all()
+    return players

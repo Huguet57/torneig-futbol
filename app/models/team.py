@@ -20,3 +20,4 @@ class Team(Base):
     )
     # For many-to-many relationship with groups through team_group association table
     groups = relationship("Group", secondary="team_group", back_populates="teams")
+    goals = relationship("Goal", back_populates="team")

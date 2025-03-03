@@ -74,6 +74,37 @@ This document outlines the API endpoints for the Soccer Tournament Management Sy
   - Updates home_score, away_score, and sets status to "completed"
   - Automatically triggers standings recalculation for the group
 
+## Goal Management
+
+### Goal CRUD Operations
+- `GET /goals/{id}`: Get goal details by ID
+  - Returns complete goal information including player and team
+  - Response includes minute, type, and related entities
+
+- `POST /goals/`: Create a new goal
+  - Requires match_id, player_id, team_id, and minute
+  - Optional fields: type (regular, penalty, own_goal)
+
+- `PUT /goals/{id}`: Update goal details
+  - Can update any goal field except ID
+  - Partial updates are supported (only include fields to be updated)
+
+- `DELETE /goals/{id}`: Delete a goal
+  - Permanently removes the goal from the database
+
+### Goal Filtering
+- `GET /goals/match/{id}`: List all goals for a match
+  - Returns goals filtered by match ID
+  - Supports pagination with skip and limit parameters
+
+- `GET /goals/player/{id}`: List all goals for a player
+  - Returns goals filtered by player ID
+  - Supports pagination with skip and limit parameters
+
+- `GET /goals/team/{id}`: List all goals for a team
+  - Returns goals filtered by team ID
+  - Supports pagination with skip and limit parameters
+
 ## Statistics
 - `GET /standings/group/{id}`: Get group standings
   - Returns calculated standings for all teams in a group

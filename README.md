@@ -18,7 +18,11 @@ The documentation for this project has been organized into multiple files for ea
 - [x] Initial planning and architecture design
 - [x] MVP 1: Tournament and Team Structure
 - [x] MVP 2: Match Management
-- [ ] MVP 3: Statistics and Reporting (Upcoming)
+- [ ] MVP 3: Statistics and Reporting (In Progress)
+  - [x] Goal tracking functionality
+  - [ ] Player statistics
+  - [ ] Team statistics
+  - [ ] Report generation
 
 ## Features
 
@@ -73,6 +77,12 @@ The project includes test scripts to verify functionality:
    poetry run python scripts/test_match_workflow.py
    ```
    This script tests the complete match management workflow from tournament creation to standings calculation.
+
+2. Goal Tracking Test
+   ```bash
+   poetry run python scripts/test_goal_tracking.py
+   ```
+   This script tests the goal tracking functionality, including recording and retrieving goals by match, player, and team.
 
 For more details on testing, see the [scripts README](scripts/README.md).
 

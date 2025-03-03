@@ -25,6 +25,8 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Pay attention to SQLAlchemy and Pydantic deprecation warnings to future-proof the codebase
 - The simpler the implementation, the better
 - Always develop a module and add the tests just after. Don't add several modules that can be filled with errors
+- When implementing API endpoints, ensure all URLs have trailing slashes for consistency
+- When creating new API endpoints, make sure to update the main.py file to include the new router
 
 ## Cursor learned
 
@@ -38,13 +40,16 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - When writing APIs that return related objects, use joinedload to eagerly load relationships to avoid N+1 query issues and ensure related objects are included in responses
 - When writing test scripts for API endpoints, make sure to use the correct API routes with proper prefixes (e.g., '/api/tournaments/' instead of '/tournaments/')
 - Include status checks in test scripts to ensure proper error handling and debugging
+- When implementing new features, ensure all required API endpoints are created and properly registered in the main application
+- When creating schemas that require relationships, make sure to include the foreign key fields in both the model and schema
 
 # Scratchpad
 
 ## Soccer Tournament Management System
 
 Previous task: Implementing MVP 1 - Tournament and Team Structure ✅
-Current task: Implementing MVP 2 - Match Management ✅
+Previous task: Implementing MVP 2 - Match Management ✅
+Current task: Implementing MVP 3 - Player Statistics and Reporting 🔄
 
 [X] Set up project structure
   [X] Create directory structure
@@ -118,15 +123,50 @@ Current task: Implementing MVP 2 - Match Management ✅
   [X] Validate UI functionality for match management
   [X] Create and run end-to-end test script
 
+[ ] MVP 3: Player Statistics and Reporting
+  [X] Create Goal model and schemas
+    [X] Implement Goal database model
+    [X] Create Goal schemas with validation
+    [X] Add API endpoints for managing goals
+    [X] Create database migration for Goal model
+    [X] Create test script for goal tracking
+    [X] Update API documentation with goal endpoints
+    [X] Implement Player API for player management
+  [ ] Implement Player Statistics tracking
+    [ ] Create PlayerStats model and schema
+    [ ] Implement statistics calculation logic
+    [ ] Add API endpoints for player statistics
+  [ ] Implement Team Statistics
+    [ ] Enhance TeamStanding model for more detailed stats
+    [ ] Create aggregate tournament team statistics
+    [ ] Add API endpoints for team statistics
+  [ ] Create Report Generation functionality
+    [ ] Implement tournament summary reports
+    [ ] Add player performance reports
+    [ ] Create exportable formats (CSV, PDF)
+  [ ] Add UI for Statistics and Reports
+    [ ] Create statistics dashboard
+    [ ] Implement player statistics view
+    [ ] Add report generation and export interface
+  [ ] Develop unit and integration tests
+    [ ] Test goal tracking functionality
+    [ ] Test player statistics calculations
+    [ ] Test report generation
+  [ ] Add documentation
+    [ ] Update API documentation with statistics endpoints
+    [ ] Create statistics and reporting guide
+    [ ] Update README with new features
+
 Next steps:
-1. Plan MVP 3 implementation (Player Statistics and Reporting)
-2. Implement player statistics tracking
-3. Create reporting functionality
+1. ✅ First implement the Goal model and related functionality
+2. Next, build player statistics tracking on top of goal data
+   - Create PlayerStats model to track player performance
+   - Implement calculation logic to update stats when goals are scored
+   - Add API endpoints to retrieve player statistics
+3. Finally implement report generation functionality
 
 Notes:
-- Match management functionality is now complete with comprehensive documentation
-- API endpoints for matches and standings are fully documented
-- README has been updated to reflect current project status
-- End-to-end test script successfully validates the match management workflow
-- The test script demonstrates the complete workflow from tournament creation to standings calculation
-- Next phase will focus on player statistics and reporting features
+- The Goal model is now implemented and working correctly
+- The Player API has been implemented to support player management
+- The test script for goal tracking is working successfully
+- Next, we need to implement player statistics tracking based on goals scored

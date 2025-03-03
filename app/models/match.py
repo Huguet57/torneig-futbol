@@ -29,3 +29,4 @@ class Match(Base):
     group = relationship("Group", back_populates="matches")
     home_team = relationship("Team", foreign_keys=[home_team_id])
     away_team = relationship("Team", foreign_keys=[away_team_id])
+    goals = relationship("Goal", back_populates="match", cascade="all, delete-orphan")
