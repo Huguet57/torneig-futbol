@@ -1,0 +1,11 @@
+from app.crud.player_stats import player_stats
+from app.crud.goal import goal
+from app.crud.match import match
+
+# Import other CRUD modules as needed
+# For example:
+# from app.crud.tournament import tournament
+# from app.crud.team import team
+# from app.crud.phase import phase
+# from app.crud.group import group
+# from app.crud.player import player 

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Players - Soccer Tournament Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Players</h2>
+        <div class="filter-controls">
+            <select id="team-filter" onchange="filterPlayers()">
+                <option value="">All Teams</option>
+                {% for team in teams %}
+                <option value="{{ team.id }}" {% if selected_team_id == team.id %}selected{% endif %}>
+                    {{ team.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="card-content">
+        {% if players %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Number</th>
+                    <th>Position</th>
+                    <th>Team</th>
+                    <th>Goals</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in players %}
+                <tr>
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.number }}</td>
+                    <td>{{ player.position }}</td>
+                    <td>{{ player.team.name }}</td>
+                    <td>{{ player.goals|length }}</td>
+                    <td>
+                        <a href="/players/{{ player.id }}" class="btn">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No players found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function filterPlayers() {
+    const teamId = document.getElementById('team-filter').value;
+    
+    let url = '/players';
+    if (teamId) {
+        url += `?team_id=${teamId}`;
+    }
+    window.location.href = url;
+}
+</script>
+{% endblock %} 

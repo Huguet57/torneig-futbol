@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Goals - Soccer Tournament Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Goals</h2>
+        <div class="filter-controls">
+            <select id="tournament-filter" onchange="filterGoals()">
+                <option value="">All Tournaments</option>
+                {% for tournament in tournaments %}
+                <option value="{{ tournament.id }}" {% if selected_tournament_id == tournament.id %}selected{% endif %}>
+                    {{ tournament.name }} ({{ tournament.edition }})
+                </option>
+                {% endfor %}
+            </select>
+            
+            <select id="team-filter" onchange="filterGoals()">
+                <option value="">All Teams</option>
+                {% for team in teams %}
+                <option value="{{ team.id }}" {% if selected_team_id == team.id %}selected{% endif %}>
+                    {{ team.name }}
+                </option>
+                {% endfor %}
+            </select>
+            
+            <select id="player-filter" onchange="filterGoals()">
+                <option value="">All Players</option>
+                {% for player in players %}
+                <option value="{{ player.id }}" {% if selected_player_id == player.id %}selected{% endif %}>
+                    {{ player.name }} ({{ player.team.name }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="card-content">
+        {% if goals %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Match</th>
+                    <th>Player</th>
+                    <th>Team</th>
+                    <th>Minute</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for goal in goals %}
+                <tr>
+                    <td>
+                        <a href="/matches/{{ goal.match.id }}">
+                            {{ goal.match.home_team.name }} vs {{ goal.match.away_team.name }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/players/{{ goal.player.id }}">
+                            {{ goal.player.name }}
+                        </a>
+                    </td>
+                    <td>{{ goal.team.name }}</td>
+                    <td>{{ goal.minute }}'</td>
+                    <td>{{ goal.type|title }}</td>
+                    <td>{{ goal.match.date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No goals found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function filterGoals() {
+    const tournamentId = document.getElementById('tournament-filter').value;
+    const teamId = document.getElementById('team-filter').value;
+    const playerId = document.getElementById('player-filter').value;
+    
+    let url = '/goals';
+    let params = [];
+    
+    if (tournamentId) {
+        params.push(`tournament_id=${tournamentId}`);
+    }
+    
+    if (teamId) {
+        params.push(`team_id=${teamId}`);
+    }
+    
+    if (playerId) {
+        params.push(`player_id=${playerId}`);
+    }
+    
+    if (params.length > 0) {
+        url += '?' + params.join('&');
+    }
+    
+    window.location.href = url;
+}
+</script>
+{% endblock %} 

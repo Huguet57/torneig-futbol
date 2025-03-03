@@ -7,7 +7,8 @@ from pathlib import Path
 from typing import Optional
 
 from app.db.database import get_db
-from app.models import Tournament, Team, Phase, Group, Match
+from app.models import Tournament, Team, Phase, Group, Match, Player, Goal
+from app.schemas.player_stats import PlayerStats
 from app.core.standings import calculate_group_standings
 
 # Initialize templates
@@ -150,30 +151,40 @@ async def view_match(
     if not match:
         raise HTTPException(status_code=404, detail="Match not found")
     
-    # Get previous and next matches in the same tournament
-    prev_match = (
-        db.query(Match)
-        .filter(
-            Match.tournament_id == match.tournament_id,
-            Match.date < match.date
-        )
-        .order_by(Match.date.desc(), Match.time.desc())
-        .first()
-    )
+    # Get goals for this match
+    goals = db.query(Goal).options(
+        joinedload(Goal.player),
+        joinedload(Goal.team)
+    ).filter(Goal.match_id == match_id).order_by(Goal.minute).all()
     
-    next_match = (
-        db.query(Match)
-        .filter(
-            Match.tournament_id == match.tournament_id,
-            Match.date > match.date
-        )
-        .order_by(Match.date.asc(), Match.time.asc())
-        .first()
-    )
+    # Get previous and next matches in the same group/phase
+    prev_match = None
+    next_match = None
     
-    # Get group standings if match is part of a group
-    standings = []
     if match.group_id:
+        prev_match = db.query(Match).filter(
+            Match.group_id == match.group_id,
+            Match.id < match_id
+        ).order_by(Match.id.desc()).first()
+        
+        next_match = db.query(Match).filter(
+            Match.group_id == match.group_id,
+            Match.id > match_id
+        ).order_by(Match.id).first()
+    else:
+        prev_match = db.query(Match).filter(
+            Match.phase_id == match.phase_id,
+            Match.id < match_id
+        ).order_by(Match.id.desc()).first()
+        
+        next_match = db.query(Match).filter(
+            Match.phase_id == match.phase_id,
+            Match.id > match_id
+        ).order_by(Match.id).first()
+    
+    # Get standings if match is in a group
+    standings = []
+    if match.group_id and match.status == "completed":
         standings = calculate_group_standings(db, match.group_id)
     
     return templates.TemplateResponse(
@@ -181,6 +192,7 @@ async def view_match(
         {
             "request": request,
             "match": match,
+            "goals": goals,
             "prev_match": prev_match,
             "next_match": next_match,
             "standings": standings,
@@ -290,6 +302,163 @@ async def view_tournament(
     return templates.TemplateResponse(
         "tournaments/view.html",
         {"request": request, "tournament": tournament, "phases": phases},
+    )
+
+
+# Player routes
+@router.get("/players", response_class=HTMLResponse)
+async def list_players(
+    request: Request,
+    team_id: Optional[int] = None,
+    db: Session = Depends(get_db),
+):
+    query = db.query(Player).options(
+        joinedload(Player.team),
+        joinedload(Player.goals),
+    )
+    
+    if team_id:
+        query = query.filter(Player.team_id == team_id)
+    
+    players = query.all()
+    teams = db.query(Team).all()
+    
+    return templates.TemplateResponse(
+        "players/index.html",
+        {
+            "request": request,
+            "players": players,
+            "teams": teams,
+            "selected_team_id": team_id,
+        },
+    )
+
+
+@router.get("/players/{player_id}", response_class=HTMLResponse)
+async def view_player(
+    request: Request,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    player = db.query(Player).options(
+        joinedload(Player.team),
+        joinedload(Player.goals).joinedload(Goal.match).joinedload(Match.home_team),
+        joinedload(Player.goals).joinedload(Goal.match).joinedload(Match.away_team),
+    ).filter(Player.id == player_id).first()
+    
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+    
+    goals = db.query(Goal).filter(Goal.player_id == player_id).all()
+    
+    # Calculate basic statistics
+    matches_played = len(set(goal.match_id for goal in goals))
+    total_goals = len(goals)
+    goals_per_match = round(total_goals / matches_played, 2) if matches_played > 0 else 0
+    
+    stats = {
+        "matches_played": matches_played,
+        "goals": total_goals,
+        "goals_per_match": goals_per_match,
+    }
+    
+    return templates.TemplateResponse(
+        "players/detail.html",
+        {
+            "request": request,
+            "player": player,
+            "goals": goals,
+            "stats": stats,
+        },
+    )
+
+
+# Goal routes
+@router.get("/goals", response_class=HTMLResponse)
+async def goals_page(
+    request: Request,
+    tournament_id: Optional[int] = None,
+    team_id: Optional[int] = None,
+    player_id: Optional[int] = None,
+    db: Session = Depends(get_db),
+):
+    """Goals page."""
+    # Build query with optional filters
+    query = db.query(Goal).options(
+        joinedload(Goal.match).joinedload(Match.tournament),
+        joinedload(Goal.player),
+        joinedload(Goal.team),
+    )
+
+    if tournament_id:
+        query = query.join(Match).filter(Match.tournament_id == tournament_id)
+
+    if team_id:
+        query = query.filter(Goal.team_id == team_id)
+
+    if player_id:
+        query = query.filter(Goal.player_id == player_id)
+
+    goals = query.order_by(Goal.match_id, Goal.minute).all()
+
+    # Get filter options
+    tournaments = db.query(Tournament).all()
+    teams = db.query(Team).all()
+    players = db.query(Player).options(joinedload(Player.team)).all()
+    
+    return templates.TemplateResponse(
+        "goals/index.html",
+        {
+            "request": request,
+            "goals": goals,
+            "tournaments": tournaments,
+            "teams": teams,
+            "players": players,
+            "selected_tournament_id": tournament_id,
+            "selected_team_id": team_id,
+            "selected_player_id": player_id,
+        },
+    )
+
+
+@router.get("/player-stats", response_class=HTMLResponse)
+async def player_stats_page(
+    request: Request,
+    tournament_id: Optional[int] = None,
+    player_id: Optional[int] = None,
+    db: Session = Depends(get_db),
+):
+    """Player statistics page."""
+    # Get tournaments for filter dropdown
+    tournaments = db.query(Tournament).all()
+    
+    # Get players for filter dropdown
+    players = db.query(Player).options(joinedload(Player.team)).all()
+    
+    # Get player statistics based on filters
+    query = db.query(PlayerStats).options(
+        joinedload(PlayerStats.player).joinedload(Player.team),
+        joinedload(PlayerStats.tournament)
+    )
+    
+    if tournament_id:
+        query = query.filter(PlayerStats.tournament_id == tournament_id)
+    
+    if player_id:
+        query = query.filter(PlayerStats.player_id == player_id)
+    
+    stats = query.all()
+    
+    return templates.TemplateResponse(
+        "player_stats.html",
+        {
+            "request": request,
+            "tournaments": tournaments,
+            "players": players,
+            "stats": stats,
+            "selected_tournament_id": tournament_id,
+            "selected_player_id": player_id
+        }
     )
 
 

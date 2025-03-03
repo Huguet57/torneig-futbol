@@ -84,6 +84,51 @@
         </div>
         {% endif %}
         
+        {% if goals %}
+        <div class="match-goals">
+            <h3>Goals</h3>
+            <div class="goals-container">
+                <div class="home-goals">
+                    <h4>{{ match.home_team.name }}</h4>
+                    <ul class="goal-list">
+                        {% for goal in goals %}
+                        {% if goal.team_id == match.home_team_id %}
+                        <li>
+                            <span class="goal-minute">{{ goal.minute }}'</span>
+                            <span class="goal-player">
+                                <a href="/players/{{ goal.player.id }}">{{ goal.player.name }}</a>
+                            </span>
+                            {% if goal.type != "regular" %}
+                            <span class="goal-type">({{ goal.type|title }})</span>
+                            {% endif %}
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="away-goals">
+                    <h4>{{ match.away_team.name }}</h4>
+                    <ul class="goal-list">
+                        {% for goal in goals %}
+                        {% if goal.team_id == match.away_team_id %}
+                        <li>
+                            <span class="goal-minute">{{ goal.minute }}'</span>
+                            <span class="goal-player">
+                                <a href="/players/{{ goal.player.id }}">{{ goal.player.name }}</a>
+                            </span>
+                            {% if goal.type != "regular" %}
+                            <span class="goal-type">({{ goal.type|title }})</span>
+                            {% endif %}
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
         {% if match.group %}
         <div class="group-standings">
             <h3>Group Standings</h3>

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ player.name }} - Soccer Tournament Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Player Details</h2>
+        <a href="/players" class="btn">Back to Players</a>
+    </div>
+    <div class="card-content">
+        <div class="player-info">
+            <h3>{{ player.name }}</h3>
+            <div class="player-details">
+                <p><strong>Number:</strong> {{ player.number }}</p>
+                <p><strong>Position:</strong> {{ player.position }}</p>
+                <p><strong>Team:</strong> <a href="/teams/{{ player.team.id }}">{{ player.team.name }}</a></p>
+                <p><strong>Goals:</strong> {{ goals|length }}</p>
+            </div>
+        </div>
+        
+        <h3>Goals</h3>
+        {% if goals %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Match</th>
+                    <th>Minute</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for goal in goals %}
+                <tr>
+                    <td>
+                        <a href="/matches/{{ goal.match.id }}">
+                            {{ goal.match.home_team.name }} vs {{ goal.match.away_team.name }}
+                        </a>
+                    </td>
+                    <td>{{ goal.minute }}'</td>
+                    <td>{{ goal.type|title }}</td>
+                    <td>{{ goal.match.date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No goals recorded for this player.</p>
+        {% endif %}
+        
+        <h3>Statistics</h3>
+        <div class="player-stats">
+            <div class="stat-item">
+                <strong>Matches Played:</strong> {{ stats.matches_played }}
+            </div>
+            <div class="stat-item">
+                <strong>Goals:</strong> {{ stats.goals }}
+            </div>
+            <div class="stat-item">
+                <strong>Goals per Match:</strong> {{ stats.goals_per_match }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -23,3 +23,6 @@ class Tournament(Base):
     matches = relationship(
         "Match", back_populates="tournament", cascade="all, delete-orphan"
     )
+    player_stats = relationship(
+        "PlayerStats", back_populates="tournament", cascade="all, delete-orphan"
+    )

@@ -17,3 +17,4 @@ class Player(Base):
     # Relationships
     team = relationship("Team", back_populates="players")
     goals = relationship("Goal", back_populates="player")
+    stats = relationship("PlayerStats", back_populates="player", cascade="all, delete-orphan")

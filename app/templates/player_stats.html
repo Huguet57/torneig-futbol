@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Player Statistics - Soccer Tournament Management System{% endblock %}
+
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Player Statistics</h2>
+        <div class="filter-controls">
+            <select id="tournament-filter" onchange="filterStats()">
+                <option value="">All Tournaments</option>
+                {% for tournament in tournaments %}
+                <option value="{{ tournament.id }}" {% if selected_tournament_id == tournament.id %}selected{% endif %}>
+                    {{ tournament.name }} ({{ tournament.edition }})
+                </option>
+                {% endfor %}
+            </select>
+            
+            <select id="player-filter" onchange="filterStats()">
+                <option value="">All Players</option>
+                {% for player in players %}
+                <option value="{{ player.id }}" {% if selected_player_id == player.id %}selected{% endif %}>
+                    {{ player.name }} ({{ player.team.name }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="card-content">
+        {% if stats %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Team</th>
+                    <th>Tournament</th>
+                    <th>Matches</th>
+                    <th>Minutes</th>
+                    <th>Goals</th>
+                    <th>Assists</th>
+                    <th>Yellow Cards</th>
+                    <th>Red Cards</th>
+                    <th>Goals/Match</th>
+                    <th>Minutes/Goal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in stats %}
+                <tr>
+                    <td>
+                        <a href="/players/{{ stat.player.id }}">
+                            {{ stat.player.name }}
+                        </a>
+                    </td>
+                    <td>{{ stat.player.team.name }}</td>
+                    <td>
+                        <a href="/tournaments/{{ stat.tournament.id }}">
+                            {{ stat.tournament.name }} ({{ stat.tournament.edition }})
+                        </a>
+                    </td>
+                    <td>{{ stat.matches_played }}</td>
+                    <td>{{ stat.minutes_played }}</td>
+                    <td>{{ stat.goals }}</td>
+                    <td>{{ stat.assists }}</td>
+                    <td>{{ stat.yellow_cards }}</td>
+                    <td>{{ stat.red_cards }}</td>
+                    <td>{{ "%.2f"|format(stat.goals_per_match) }}</td>
+                    <td>{{ "%.2f"|format(stat.minutes_per_goal) if stat.goals > 0 else "N/A" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>No player statistics found. Try adjusting your filters or add some statistics first.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function filterStats() {
+    const tournamentId = document.getElementById("tournament-filter").value;
+    const playerId = document.getElementById("player-filter").value;
+    
+    let url = "/player-stats";
+    let params = [];
+    
+    if (tournamentId) {
+        params.push(`tournament_id=${tournamentId}`);
+    }
+    
+    if (playerId) {
+        params.push(`player_id=${playerId}`);
+    }
+    
+    if (params.length > 0) {
+        url += "?" + params.join("&");
+    }
+    
+    window.location.href = url;
+}
+</script>
+{% endblock %}
