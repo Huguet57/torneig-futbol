@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Create Match - Soccer Tournament Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Create Match</h2>
+    </div>
+    <div class="card-content">
+        <form method="post" action="/matches/create">
+            <div class="form-group">
+                <label for="tournament_id">Tournament</label>
+                <select id="tournament_id" name="tournament_id" class="form-control" required 
+                        onchange="updatePhases(this.value)">
+                    <option value="">Select Tournament</option>
+                    {% for tournament in tournaments %}
+                    <option value="{{ tournament.id }}" 
+                            {% if selected_tournament_id == tournament.id %}selected{% endif %}>
+                        {{ tournament.name }} ({{ tournament.edition }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="phase_id">Phase</label>
+                <select id="phase_id" name="phase_id" class="form-control" required 
+                        onchange="updateGroups(this.value)">
+                    <option value="">Select Phase</option>
+                    {% for phase in phases %}
+                    <option value="{{ phase.id }}">{{ phase.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="group_id">Group (Optional)</label>
+                <select id="group_id" name="group_id" class="form-control">
+                    <option value="">Select Group</option>
+                    {% for group in groups %}
+                    <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="home_team_id">Home Team</label>
+                <select id="home_team_id" name="home_team_id" class="form-control" required>
+                    <option value="">Select Home Team</option>
+                    {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="away_team_id">Away Team</label>
+                <select id="away_team_id" name="away_team_id" class="form-control" required>
+                    <option value="">Select Away Team</option>
+                    {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="time">Time (Optional)</label>
+                <input type="time" id="time" name="time" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="location">Location (Optional)</label>
+                <input type="text" id="location" name="location" class="form-control">
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">Create Match</button>
+                <a href="/matches" class="btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+async function updatePhases(tournamentId) {
+    if (!tournamentId) return;
+    
+    const response = await fetch(`/api/phases?tournament_id=${tournamentId}`);
+    const phases = await response.json();
+    
+    const phaseSelect = document.getElementById('phase_id');
+    phaseSelect.innerHTML = '<option value="">Select Phase</option>';
+    phases.forEach(phase => {
+        phaseSelect.innerHTML += `<option value="${phase.id}">${phase.name}</option>`;
+    });
+    
+    // Clear group selection
+    document.getElementById('group_id').innerHTML = '<option value="">Select Group</option>';
+}
+
+async function updateGroups(phaseId) {
+    if (!phaseId) return;
+    
+    const response = await fetch(`/api/groups?phase_id=${phaseId}`);
+    const groups = await response.json();
+    
+    const groupSelect = document.getElementById('group_id');
+    groupSelect.innerHTML = '<option value="">Select Group</option>';
+    groups.forEach(group => {
+        groupSelect.innerHTML += `<option value="${group.id}">${group.name}</option>`;
+    });
+}
+</script>
+{% endblock %}
+{% endblock %} 

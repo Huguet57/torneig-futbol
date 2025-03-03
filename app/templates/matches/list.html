@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Matches - Soccer Tournament Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Matches</h2>
+        <div class="filter-controls">
+            <select id="tournament-filter" onchange="filterMatches()">
+                <option value="">All Tournaments</option>
+                {% for tournament in tournaments %}
+                <option value="{{ tournament.id }}" {% if selected_tournament_id == tournament.id %}selected{% endif %}>
+                    {{ tournament.name }} ({{ tournament.edition }})
+                </option>
+                {% endfor %}
+            </select>
+            {% if selected_tournament_id %}
+            <select id="phase-filter" onchange="filterMatches()">
+                <option value="">All Phases</option>
+                {% for phase in phases %}
+                <option value="{{ phase.id }}" {% if selected_phase_id == phase.id %}selected{% endif %}>
+                    {{ phase.name }}
+                </option>
+                {% endfor %}
+            </select>
+            {% endif %}
+            {% if selected_phase_id %}
+            <select id="group-filter" onchange="filterMatches()">
+                <option value="">All Groups</option>
+                {% for group in groups %}
+                <option value="{{ group.id }}" {% if selected_group_id == group.id %}selected{% endif %}>
+                    {{ group.name }}
+                </option>
+                {% endfor %}
+            </select>
+            {% endif %}
+        </div>
+        <a href="/matches/create{% if selected_tournament_id %}?tournament_id={{ selected_tournament_id }}{% endif %}" 
+           class="btn btn-success">Create New Match</a>
+    </div>
+    <div class="card-content">
+        {% if matches %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Home Team</th>
+                    <th>Score</th>
+                    <th>Away Team</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for match in matches %}
+                <tr>
+                    <td>{{ match.date }}</td>
+                    <td>{{ match.time if match.time else "TBD" }}</td>
+                    <td>{{ match.home_team.name }}</td>
+                    <td class="match-score">
+                        {% if match.status == "completed" %}
+                            {{ match.home_score }} - {{ match.away_score }}
+                        {% elif match.status == "in-progress" %}
+                            {{ match.home_score if match.home_score != None else 0 }} - 
+                            {{ match.away_score if match.away_score != None else 0 }}
+                            <span class="live-indicator">LIVE</span>
+                        {% else %}
+                            vs
+                        {% endif %}
+                    </td>
+                    <td>{{ match.away_team.name }}</td>
+                    <td>{{ match.location if match.location else "TBD" }}</td>
+                    <td>
+                        <span class="status-badge status-{{ match.status }}">
+                            {{ match.status | title }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/matches/{{ match.id }}" class="btn">View</a>
+                        <a href="/matches/{{ match.id }}/edit" class="btn btn-warning">Edit</a>
+                        {% if match.status != "completed" %}
+                        <a href="/matches/{{ match.id }}/result" class="btn btn-primary">Update Result</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No matches found.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+function filterMatches() {
+    const tournamentId = document.getElementById('tournament-filter').value;
+    const phaseId = document.getElementById('phase-filter')?.value;
+    const groupId = document.getElementById('group-filter')?.value;
+    
+    let url = '/matches';
+    if (tournamentId) {
+        url += `?tournament_id=${tournamentId}`;
+        if (phaseId) {
+            url += `&phase_id=${phaseId}`;
+            if (groupId) {
+                url += `&group_id=${groupId}`;
+            }
+        }
+    }
+    window.location.href = url;
+}
+</script>
+{% endblock %}
+{% endblock %} 

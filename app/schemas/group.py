@@ -38,6 +38,16 @@ class Group(GroupBase):
         from_attributes = True  # For SQLAlchemy models compatibility
 
 
+# Model for group with teams and phase information
+class GroupWithTeams(Group):
+    phase_name: str
+    tournament_id: int
+    tournament_name: str
+
+    class Config:
+        from_attributes = True
+
+
 # Model for adding a team to a group
 class TeamToGroup(BaseModel):
     team_id: int

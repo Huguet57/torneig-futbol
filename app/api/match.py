@@ -64,7 +64,7 @@ def delete_match(match_id: int = Path(...), db: Session = Depends(get_db)):
     if db_match is None:
         raise HTTPException(status_code=404, detail="Match not found")
     
-    crud.remove(db, id=match_id)
+    crud.delete(db, id=match_id)
     return {"message": "Match deleted successfully"}
 
 
@@ -80,12 +80,7 @@ def update_match_result(
         raise HTTPException(status_code=404, detail="Match not found")
     
     try:
-        update_data = {
-            "home_score": match_result.home_score,
-            "away_score": match_result.away_score,
-            "status": match_result.status,
-        }
-        db_match = crud.update(db, db_obj=db_match, obj_in=update_data)
+        db_match = crud.update(db, db_obj=db_match, obj_in=match_result)
         return db_match
     except IntegrityError:
         db.rollback()

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Match Details - Soccer Tournament Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Match Details</h2>
+        <div class="match-navigation">
+            {% if prev_match %}
+            <a href="/matches/{{ prev_match.id }}" class="btn">← Previous Match</a>
+            {% endif %}
+            {% if next_match %}
+            <a href="/matches/{{ next_match.id }}" class="btn">Next Match →</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-content">
+        <div class="match-info">
+            <div class="tournament-info">
+                <h3>{{ match.tournament.name }} ({{ match.tournament.edition }})</h3>
+                <p>{{ match.phase.name }}{% if match.group %} - {{ match.group.name }}{% endif %}</p>
+            </div>
+            
+            <div class="match-details">
+                <div class="match-date">
+                    <strong>Date:</strong> {{ match.date }}
+                    {% if match.time %}
+                    <strong>Time:</strong> {{ match.time }}
+                    {% endif %}
+                </div>
+                {% if match.location %}
+                <div class="match-location">
+                    <strong>Location:</strong> {{ match.location }}
+                </div>
+                {% endif %}
+                <div class="match-status">
+                    <span class="status-badge status-{{ match.status }}">
+                        {{ match.status | title }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="match-score-container">
+                <div class="team home-team">
+                    <div class="team-logo">
+                        {% if match.home_team.logo_url %}
+                        <img src="{{ match.home_team.logo_url }}" alt="{{ match.home_team.name }} Logo">
+                        {% endif %}
+                    </div>
+                    <h4>{{ match.home_team.name }}</h4>
+                </div>
+                
+                <div class="score">
+                    {% if match.status == "completed" %}
+                        <span class="score-number">{{ match.home_score }}</span>
+                        <span class="score-separator">-</span>
+                        <span class="score-number">{{ match.away_score }}</span>
+                    {% elif match.status == "in-progress" %}
+                        <span class="score-number">{{ match.home_score if match.home_score != None else 0 }}</span>
+                        <span class="score-separator">-</span>
+                        <span class="score-number">{{ match.away_score if match.away_score != None else 0 }}</span>
+                        <span class="live-indicator">LIVE</span>
+                    {% else %}
+                        <span class="vs">vs</span>
+                    {% endif %}
+                </div>
+                
+                <div class="team away-team">
+                    <div class="team-logo">
+                        {% if match.away_team.logo_url %}
+                        <img src="{{ match.away_team.logo_url }}" alt="{{ match.away_team.name }} Logo">
+                        {% endif %}
+                    </div>
+                    <h4>{{ match.away_team.name }}</h4>
+                </div>
+            </div>
+        </div>
+        
+        {% if match.status != "completed" %}
+        <div class="match-actions">
+            <a href="/matches/{{ match.id }}/edit" class="btn btn-warning">Edit Match</a>
+            <a href="/matches/{{ match.id }}/result" class="btn btn-primary">Update Result</a>
+        </div>
+        {% endif %}
+        
+        {% if match.group %}
+        <div class="group-standings">
+            <h3>Group Standings</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Team</th>
+                        <th>Played</th>
+                        <th>Won</th>
+                        <th>Drawn</th>
+                        <th>Lost</th>
+                        <th>GF</th>
+                        <th>GA</th>
+                        <th>GD</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for standing in standings %}
+                    <tr {% if standing.team_id in [match.home_team_id, match.away_team_id] %}class="highlight"{% endif %}>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ standing.team_name }}</td>
+                        <td>{{ standing.matches_played }}</td>
+                        <td>{{ standing.wins }}</td>
+                        <td>{{ standing.draws }}</td>
+                        <td>{{ standing.losses }}</td>
+                        <td>{{ standing.goals_for }}</td>
+                        <td>{{ standing.goals_against }}</td>
+                        <td>{{ standing.goal_difference }}</td>
+                        <td><strong>{{ standing.points }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

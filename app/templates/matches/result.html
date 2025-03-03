@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Update Match Result - Soccer Tournament Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Update Match Result</h2>
+    </div>
+    <div class="card-content">
+        <div class="match-info">
+            <div class="tournament-info">
+                <h3>{{ match.tournament.name }} ({{ match.tournament.edition }})</h3>
+                <p>{{ match.phase.name }}{% if match.group %} - {{ match.group.name }}{% endif %}</p>
+            </div>
+            
+            <div class="match-details">
+                <div class="match-date">
+                    <strong>Date:</strong> {{ match.date }}
+                    {% if match.time %}
+                    <strong>Time:</strong> {{ match.time }}
+                    {% endif %}
+                </div>
+                {% if match.location %}
+                <div class="match-location">
+                    <strong>Location:</strong> {{ match.location }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <form method="post" action="/matches/{{ match.id }}/result" class="result-form">
+            <div class="match-score-container">
+                <div class="team home-team">
+                    <div class="team-logo">
+                        {% if match.home_team.logo_url %}
+                        <img src="{{ match.home_team.logo_url }}" alt="{{ match.home_team.name }} Logo">
+                        {% endif %}
+                    </div>
+                    <h4>{{ match.home_team.name }}</h4>
+                    <div class="score-input">
+                        <label for="home_score">Home Score</label>
+                        <input type="number" id="home_score" name="home_score" 
+                               value="{{ match.home_score if match.home_score != None else 0 }}"
+                               min="0" required>
+                    </div>
+                </div>
+                
+                <div class="score-vs">
+                    <span>vs</span>
+                </div>
+                
+                <div class="team away-team">
+                    <div class="team-logo">
+                        {% if match.away_team.logo_url %}
+                        <img src="{{ match.away_team.logo_url }}" alt="{{ match.away_team.name }} Logo">
+                        {% endif %}
+                    </div>
+                    <h4>{{ match.away_team.name }}</h4>
+                    <div class="score-input">
+                        <label for="away_score">Away Score</label>
+                        <input type="number" id="away_score" name="away_score" 
+                               value="{{ match.away_score if match.away_score != None else 0 }}"
+                               min="0" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="status">Match Status</label>
+                <select id="status" name="status" class="form-control" required>
+                    <option value="scheduled" {% if match.status == "scheduled" %}selected{% endif %}>Scheduled</option>
+                    <option value="in-progress" {% if match.status == "in-progress" %}selected{% endif %}>In Progress</option>
+                    <option value="completed" {% if match.status == "completed" %}selected{% endif %}>Completed</option>
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">Update Result</button>
+                <a href="/matches/{{ match.id }}" class="btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+document.querySelector('.result-form').addEventListener('submit', function(e) {
+    const status = document.getElementById('status').value;
+    const homeScore = document.getElementById('home_score').value;
+    const awayScore = document.getElementById('away_score').value;
+    
+    if (status === 'completed' && (homeScore === '' || awayScore === '')) {
+        e.preventDefault();
+        alert('Both scores must be set when marking a match as completed.');
+    }
+});
+</script>
+{% endblock %}
+{% endblock %} 
