@@ -4,10 +4,100 @@ from sqlalchemy.orm import Session
 
 from app.api.crud_base import CRUDBase
 from app.models.player_stats import PlayerStats
-from app.schemas.player_stats import PlayerStatsCreate, PlayerStatsUpdate
+from app.schemas.player_stats import PlayerStatsCreate, PlayerStatsUpdate, PlayerStatsBase
 
 
-class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsCreate, PlayerStatsUpdate]):
+class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
+    """CRUD operations for player statistics."""
+    
+    def get_by_player_id(self, db: Session, player_id: int) -> Optional[PlayerStats]:
+        """Get player statistics by player ID."""
+        return db.query(PlayerStats).filter(PlayerStats.player_id == player_id).first()
+    
+    def create_for_player(self, db: Session, player_id: int, tournament_id: int = None) -> PlayerStats:
+        """Create initial statistics for a player."""
+        stats_data = {
+            "player_id": player_id,
+            "matches_played": 0,
+            "goals_scored": 0,
+            "minutes_played": 0,
+            "goals_per_match": 0.0,
+            "minutes_per_goal": 0.0
+        }
+        
+        # Add tournament_id if provided
+        if tournament_id is not None:
+            stats_data["tournament_id"] = tournament_id
+        
+        stats = PlayerStats(**stats_data)
+        db.add(stats)
+        db.commit()
+        db.refresh(stats)
+        return stats
+    
+    def update_stats_from_match(
+        self,
+        db: Session,
+        player_id: int,
+        minutes_played: int,
+        goals_scored: int = 0
+    ) -> PlayerStats:
+        """Update player statistics after a match."""
+        stats = self.get_by_player_id(db, player_id)
+        if not stats:
+            stats = self.create_for_player(db, player_id)
+        
+        stats.matches_played += 1
+        stats.minutes_played += minutes_played
+        stats.goals_scored += goals_scored
+        stats.update_calculated_stats()
+        
+        db.commit()
+        db.refresh(stats)
+        return stats
+    
+    def get_tournament_top_scorers(
+        self,
+        db: Session,
+        tournament_id: int,
+        limit: int = 5
+    ) -> List[PlayerStats]:
+        """Get top scorers for a tournament."""
+        from app.models.goal import Goal
+        from app.models.match import Match
+        from app.models.player import Player
+        from sqlalchemy import func, desc
+        
+        # Count goals by player in matches of the tournament
+        goals_by_player = (
+            db.query(
+                Goal.player_id,
+                func.count(Goal.id).label("goal_count")
+            )
+            .join(Match, Goal.match_id == Match.id)
+            .filter(Match.tournament_id == tournament_id)
+            .group_by(Goal.player_id)
+            .order_by(desc("goal_count"))
+            .limit(limit)
+            .all()
+        )
+        
+        # Create or update player stats for each top scorer
+        top_scorers = []
+        for player_id, goal_count in goals_by_player:
+            # Get or create stats for this player in this tournament
+            stats = self.get_by_player_tournament(db, player_id=player_id, tournament_id=tournament_id)
+            if not stats:
+                stats = self.create_for_player(db, player_id=player_id, tournament_id=tournament_id)
+                
+            # Update with goal count
+            stats.goals_scored = goal_count
+            stats.update_calculated_stats()
+            
+            top_scorers.append(stats)
+            
+        return top_scorers
+    
     def get_by_player_tournament(
         self, db: Session, *, player_id: int, tournament_id: int
     ) -> Optional[PlayerStats]:
@@ -85,7 +175,7 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsCreate, PlayerStatsUpdate
         )
         
         # Update stats
-        db_obj.goals = len(player_goals)
+        db_obj.goals_scored = len(player_goals)
         
         # Count matches played (matches where the player scored)
         matches_with_goals = set(g.match_id for g in player_goals)

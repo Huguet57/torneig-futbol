@@ -21,6 +21,7 @@ parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
 
 from app.db.database import Base
+from app.models import Tournament, Team, Phase, Group, Player, Match, Goal, PlayerStats
 
 # This is the MetaData object used by Alembic for migrations
 target_metadata = Base.metadata
