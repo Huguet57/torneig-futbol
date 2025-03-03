@@ -10,16 +10,19 @@ The documentation for this project has been organized into multiple files for ea
 - [API Documentation](docs/api.md) - Detailed API endpoint definitions
 - [Implementation Details](docs/implementation.md) - Database design and technology stack
 - [Development Approach](docs/development_approach.md) - Testing strategy and MVP iteration cycles
+- [Match Management](docs/match_management.md) - Detailed guide for match scheduling and results tracking
 - [Linting Guide](LINTING.md) - Instructions for using Ruff linter and formatter
 
 ## Project Status
 
 - [x] Initial planning and architecture design
-- [ ] Development in progress
+- [x] MVP 1: Tournament and Team Structure
+- [x] MVP 2: Match Management
+- [ ] MVP 3: Statistics and Reporting (Upcoming)
 
 ## Features
 
-The system will support the following core features:
+The system supports the following core features:
 
 - Tournament organization with multiple phases (groups, knockout stages)
 - Team and player management
@@ -60,6 +63,18 @@ The system will support the following core features:
    ```
    http://localhost:8000/docs
    ```
+
+### Testing
+
+The project includes test scripts to verify functionality:
+
+1. Match Management Workflow Test
+   ```bash
+   poetry run python scripts/test_match_workflow.py
+   ```
+   This script tests the complete match management workflow from tournament creation to standings calculation.
+
+For more details on testing, see the [scripts README](scripts/README.md).
 
 For more details on linting and code quality tools, see the [Linting Guide](LINTING.md).
 

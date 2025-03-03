@@ -36,6 +36,8 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Break down large documentation into separate files for better organization and easier reference
 - In SQLAlchemy, joinedload is imported from sqlalchemy.orm and not a method of the Session object. Always import it separately: from sqlalchemy.orm import joinedload
 - When writing APIs that return related objects, use joinedload to eagerly load relationships to avoid N+1 query issues and ensure related objects are included in responses
+- When writing test scripts for API endpoints, make sure to use the correct API routes with proper prefixes (e.g., '/api/tournaments/' instead of '/tournaments/')
+- Include status checks in test scripts to ensure proper error handling and debugging
 
 # Scratchpad
 
@@ -105,18 +107,26 @@ Current task: Implementing MVP 2 - Match Management ✅
     [X] Add match creation form
     [X] Create match detail view with result updates
 
-[ ] Documentation
-  [ ] Add API endpoint documentation
-  [ ] Add database schema documentation
-  [ ] Add setup instructions
+[X] Documentation
+  [X] Update API endpoint documentation with match details
+  [X] Create detailed match management documentation
+  [X] Update README with project status
+
+[X] Test the complete match management workflow
+  [X] Verify match creation and listing
+  [X] Test match result updates and standings calculation
+  [X] Validate UI functionality for match management
+  [X] Create and run end-to-end test script
 
 Next steps:
-1. Add documentation for the new match functionality
-2. Test the complete match management workflow
-3. Plan MVP 3 implementation
+1. Plan MVP 3 implementation (Player Statistics and Reporting)
+2. Implement player statistics tracking
+3. Create reporting functionality
 
 Notes:
-- Match management functionality is now complete
-- UI templates for matches are in place with filtering and navigation
-- Standings calculation is implemented and integrated into match views
-- Next phase should focus on player statistics and reporting
+- Match management functionality is now complete with comprehensive documentation
+- API endpoints for matches and standings are fully documented
+- README has been updated to reflect current project status
+- End-to-end test script successfully validates the match management workflow
+- The test script demonstrates the complete workflow from tournament creation to standings calculation
+- Next phase will focus on player statistics and reporting features

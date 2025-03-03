@@ -39,17 +39,46 @@ This document outlines the API endpoints for the Soccer Tournament Management Sy
 - `DELETE /players/{id}`: Delete player
 
 ## Match Management
-- `GET /tournaments/{id}/matches`: List all matches for a tournament
-- `GET /phases/{id}/matches`: List all matches for a phase
-- `GET /groups/{id}/matches`: List all matches for a group
-- `GET /matches/{id}`: Get match details
-- `POST /tournaments/{id}/matches`: Create new match
-- `PUT /matches/{id}`: Update match
-- `DELETE /matches/{id}`: Delete match
+
+### Match CRUD Operations
+- `GET /matches/{id}`: Get match details by ID
+  - Returns complete match information including related teams
+  - Response includes match status, scores, and location
+
+- `POST /matches/`: Create a new match
+  - Requires tournament_id, phase_id, home_team_id, away_team_id, and date
+  - Optional fields: group_id, time, location
+
+- `PUT /matches/{id}`: Update match details
+  - Can update any match field except ID
+  - Partial updates are supported (only include fields to be updated)
+
+- `DELETE /matches/{id}`: Delete a match
+  - Permanently removes the match from the database
+
+### Match Filtering
+- `GET /matches/tournament/{id}`: List all matches for a tournament
+  - Returns matches filtered by tournament ID
+  - Supports pagination with skip and limit parameters
+
+- `GET /matches/phase/{id}`: List all matches for a phase
+  - Returns matches filtered by phase ID
+  - Supports pagination with skip and limit parameters
+
+- `GET /matches/group/{id}`: List all matches for a group
+  - Returns matches filtered by group ID
+  - Supports pagination with skip and limit parameters
+
+### Match Results
 - `PUT /matches/{id}/result`: Update match result
+  - Updates home_score, away_score, and sets status to "completed"
+  - Automatically triggers standings recalculation for the group
 
 ## Statistics
-- `GET /tournaments/{id}/standings`: Get tournament standings
-- `GET /groups/{id}/standings`: Get group standings
+- `GET /standings/group/{id}`: Get group standings
+  - Returns calculated standings for all teams in a group
+  - Includes matches played, wins, draws, losses, goals, and points
+  - Sorted by points (descending) and goal difference
+
 - `GET /tournaments/{id}/players/stats`: Get player statistics for tournament
 - `GET /tournaments/{id}/teams/stats`: Get team statistics for tournament 
