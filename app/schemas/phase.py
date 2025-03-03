@@ -31,5 +31,4 @@ class Phase(PhaseBase):
     id: int
     tournament_id: int
 
-    class Config:
-        from_attributes = True  # For SQLAlchemy models compatibility
+    model_config = {"from_attributes": True}  # For SQLAlchemy models compatibility

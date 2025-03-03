@@ -24,8 +24,7 @@ class TeamInGroup(BaseModel):
     name: str
     short_name: str
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # Model for group in database (includes ID)
@@ -34,8 +33,7 @@ class Group(GroupBase):
     phase_id: int
     teams: List[TeamInGroup] = []
 
-    class Config:
-        from_attributes = True  # For SQLAlchemy models compatibility
+    model_config = {"from_attributes": True}  # For SQLAlchemy models compatibility
 
 
 # Model for group with teams and phase information
@@ -44,8 +42,7 @@ class GroupWithTeams(Group):
     tournament_id: int
     tournament_name: str
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # Model for adding a team to a group

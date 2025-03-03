@@ -57,8 +57,7 @@ class TeamBase(BaseModel):
     short_name: Optional[str] = None
     logo_url: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 class Match(MatchBase):
@@ -69,5 +68,4 @@ class Match(MatchBase):
     home_team: Optional[TeamBase] = None
     away_team: Optional[TeamBase] = None
 
-    class Config:
-        from_attributes = True 
+    model_config = {"from_attributes": True} 

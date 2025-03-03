@@ -33,5 +33,4 @@ class TournamentUpdate(TournamentBase):
 class Tournament(TournamentBase):
     id: int
 
-    class Config:
-        from_attributes = True  # For SQLAlchemy models compatibility
+    model_config = {"from_attributes": True}  # For SQLAlchemy models compatibility

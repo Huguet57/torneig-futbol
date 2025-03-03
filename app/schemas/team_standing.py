@@ -16,5 +16,4 @@ class TeamStanding(BaseModel):
     goal_difference: int = Field(default=0)
     points: int = Field(default=0, ge=0)
 
-    class Config:
-        from_attributes = True 
+    model_config = {"from_attributes": True} 
