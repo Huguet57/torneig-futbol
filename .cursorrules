@@ -41,7 +41,9 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 
 ## Soccer Tournament Management System
 
-Current task: Implementing MVP 1 - Tournament and Team Structure
+Previous task: Implementing MVP 1 - Tournament and Team Structure ✅
+
+Current task: Implementing MVP 2 - Match Management
 
 [X] Set up project structure
   [X] Create directory structure
@@ -57,14 +59,14 @@ Current task: Implementing MVP 1 - Tournament and Team Structure
   [X] Implement Player model (basic)
   [X] Implement Match model (basic)
 
-[X] Create API endpoints
+[X] Create API endpoints for MVP 1
   [X] Create base CRUD operations class
   [X] Implement Tournament endpoints
   [X] Implement Team endpoints
   [X] Implement Phase endpoints
   [X] Implement Group endpoints with team assignment
 
-[X] Add unit tests
+[X] Add unit tests for MVP 1
   [X] Set up test configuration
   [X] Create test fixtures
   [X] Test Tournament API endpoints
@@ -76,10 +78,33 @@ Current task: Implementing MVP 1 - Tournament and Team Structure
   [X] Create Alembic configuration
   [X] Set up migration environment
 
-[X] Add simple UI
+[X] Add simple UI for MVP 1
   [X] Create base templates
   [X] Implement tournament management UI
   [X] Add CSS styling
+
+[ ] MVP 2: Match Management
+  [X] Create match schemas
+    [X] Create Match schema with validation
+    [X] Create MatchCreate and MatchUpdate schemas
+    [X] Add match result schema
+  [X] Implement Match API endpoints
+    [X] Create match CRUD operations
+    [X] Implement match listing endpoints (by tournament, phase, group)
+    [X] Add endpoint for updating match results
+  [X] Implement Team Standing model/schema
+    [X] Create standing model for storing group standings
+    [X] Implement logic for calculating standings
+    [X] Create API endpoints for retrieving standings
+  [X] Add unit tests for match functionality
+    [X] Test match CRUD operations
+    [X] Test match listing by relationship (tournament, phase, group)
+    [X] Test standings calculation
+    [X] Test match result updates
+  [ ] Create Match UI
+    [ ] Implement match listing view
+    [ ] Add match creation form
+    [ ] Create match detail view with result updates
 
 [ ] Documentation
   [ ] Add API endpoint documentation
@@ -87,15 +112,13 @@ Current task: Implementing MVP 1 - Tournament and Team Structure
   [ ] Add setup instructions
 
 Next steps:
-1. Complete the UI for teams, phases, and groups
-2. Generate initial database migration
-3. Add more comprehensive tests
-4. Add detailed API documentation
+1. Create UI templates for match management
+2. Add match creation form 
+3. Add match listing view with result updates
+4. Run tests to ensure all functionality works correctly
 
 Notes:
-- Core models and API endpoints are now in place
-- Basic UI is implemented for tournament management
-- Unit tests are in place for core functionality and all tests are passing
-- Fixed issue with joinedload in group API endpoints
-- Database migrations are configured with Alembic
-- Need to complete UI for other entities and add more tests
+- Match API endpoints and schemas are now in place
+- Standings calculation logic has been implemented
+- Unit tests for match functionality are in place
+- UI templates for match management still need to be created
