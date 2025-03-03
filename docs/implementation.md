@@ -84,16 +84,16 @@ This document outlines the implementation details for the Soccer Tournament Mana
 - `goal_difference`: Goal difference
 - `points`: Total points
 
-#### PlayerStats (In Progress)
+#### PlayerStats
 - `id`: Unique identifier
-- `tournament_id`: Reference to Tournament
-- `phase_id`: Reference to Phase (nullable)
 - `player_id`: Reference to Player
-- `team_id`: Reference to Team
+- `tournament_id`: Reference to Tournament
 - `matches_played`: Number of matches played
-- `goals`: Number of goals scored (calculated from Goal records)
+- `goals_scored`: Number of goals scored (calculated from Goal records)
 - `minutes_played`: Minutes played
-- Implementation Status: 🔄 In Progress
+- `goals_per_match`: Calculated ratio of goals per match
+- `minutes_per_goal`: Calculated ratio of minutes per goal
+- Implementation Status: ✅ Completed
 
 ## Technology Stack
 
@@ -119,14 +119,15 @@ This document outlines the implementation details for the Soccer Tournament Mana
 - ✅ Match scheduling and result tracking
 - ✅ Team standings calculation
 - ✅ Goal tracking system
+- ✅ Player statistics tracking and calculations
+- ✅ Tournament top scorers functionality
 
 ### In Progress
-- 🔄 Player statistics tracking
-- 🔄 Integration of goal data with player statistics
+- 🔄 Team statistics enhancement
 
 ### Upcoming Work
-- Team statistics enhancement
 - UI improvements for statistics visualization
+- Advanced reporting capabilities
 
 ### Development Philosophy
 - Focus on simplicity and core functionality

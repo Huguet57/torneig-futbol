@@ -113,17 +113,20 @@ This document outlines the API endpoints for the Soccer Tournament Management Sy
   - Includes matches played, wins, draws, losses, goals, and points
   - Sorted by points (descending) and goal difference
 
-### Player Statistics (In Development)
-The following endpoints for player statistics are currently under development:
+### Player Statistics
+The following player statistics endpoints are now available:
 
-- `GET /player-stats/{id}`: Get player statistics by player ID
+- `GET /players/{player_id}/stats`: Get player statistics by player ID
   - Returns complete statistics for a specific player
   - Includes matches played, goals scored, minutes played
+  - Supports optional tournament_id query parameter to filter by tournament
 
-- `GET /player-stats/tournament/{id}`: Get all player statistics for a tournament
-  - Returns statistics for all players in a tournament
-  - Supports filtering by top scorers, position, and team
-  - Includes pagination with skip and limit parameters
+- `GET /tournaments/{tournament_id}/top-scorers`: Get top scorers for a tournament
+  - Returns a list of players with the most goals in the tournament
+  - Includes player details and goal statistics
+  - Supports limiting the number of results with the limit parameter
+
+Additional player statistics features are planned:
 
 - `GET /player-stats/team/{id}`: Get player statistics for a team
   - Returns statistics for all players in a specific team
@@ -133,10 +136,6 @@ The following endpoints for player statistics are currently under development:
 - `GET /player-stats/match/{id}`: Get player statistics for a specific match
   - Returns statistics for all players who participated in a match
   - Shows players who scored goals with goal details
-
-- `POST /player-stats/recalculate/{player_id}`: Recalculate statistics for a player
-  - Triggers recalculation of statistics based on recorded goals and matches
-  - Admin-only endpoint for data maintenance
 
 ## Implementation Philosophy
 

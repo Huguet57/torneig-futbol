@@ -20,8 +20,8 @@ The documentation for this project has been organized into multiple files for ea
 - [x] MVP 2: Match Management
 - [ ] MVP 3: Player Statistics (In Progress)
   - [x] Goal tracking functionality ✅ (Completed with tests)
-  - [ ] Player statistics (In Progress)
-  - [ ] Team statistics enhancement
+  - [x] Player statistics ✅ (Completed with tournament-specific filtering)
+  - [ ] Team statistics enhancement (Next up)
 
 ## Features
 
@@ -81,6 +81,12 @@ The project includes test scripts to verify functionality:
    poetry run python scripts/test_goal_tracking.py
    ```
    This script tests the goal tracking functionality, including recording and retrieving goals by match, player, and team.
+
+3. Player Statistics Test
+   ```bash
+   poetry run python scripts/test_player_stats.py
+   ```
+   This script tests the player statistics functionality, calculating and retrieving player stats and tournament top scorers.
 
 For more details on testing, see the [scripts README](scripts/README.md).
 

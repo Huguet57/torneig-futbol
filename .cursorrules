@@ -43,6 +43,8 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Include status checks in test scripts to ensure proper error handling and debugging
 - When implementing new features, ensure all required API endpoints are created and properly registered in the main application
 - When creating schemas that require relationships, make sure to include the foreign key fields in both the model and schema
+- When designing API endpoints that retrieve or create resources with optional filtering, ensure all possible filter combinations are handled correctly (e.g., optional tournament_id in player statistics)
+- For statistics calculation functionality, always ensure proper update triggers are in place when related data changes, and include explicit update methods that can be called when needed
 
 # Scratchpad
 
@@ -134,37 +136,39 @@ Current task: Implementing MVP 3 - Player Statistics 🔄
     [X] Update API documentation with goal endpoints
     [X] Implement Player API for player management
     [X] Test goal tracking functionality ← Completed!
-  [ ] Implement Player Statistics tracking
-    [ ] Create PlayerStats model and schema
-    [ ] Implement statistics calculation logic
-    [ ] Add API endpoints for player statistics
+  [X] Implement Player Statistics tracking
+    [X] Create PlayerStats model and schema
+    [X] Implement statistics calculation logic
+    [X] Add API endpoints for player statistics
+    [X] Test player statistics functionality ← Completed!
   [ ] Implement Team Statistics
     [ ] Enhance TeamStanding model for more detailed stats
     [ ] Create aggregate tournament team statistics
     [ ] Add API endpoints for team statistics
   [ ] Develop unit and integration tests
-    [ ] Test player statistics calculations
+    [X] Test player statistics calculations ← Completed!
+    [ ] Test team statistics calculations
   [ ] Add documentation
-    [ ] Update API documentation with statistics endpoints
-    [ ] Update README with new features
+    [X] Update API documentation with player statistics endpoints
+    [ ] Update API documentation with team statistics endpoints
+    [X] Update README with new features
 
-Current milestone completed: Goal tracking functionality ✅
+Current milestone completed: Player statistics tracking ✅
 Next tasks to implement:
 1. ✅ First implement the Goal model and related functionality - COMPLETED
-2. Next, build player statistics tracking on top of goal data - IN PROGRESS
-   - Create PlayerStats model to track player performance metrics
-   - Implement calculation logic to update stats when goals are scored
-   - Add API endpoints to retrieve individual and aggregated player statistics
-3. Finally enhance team standings with additional statistics
+2. ✅ Build player statistics tracking on top of goal data - COMPLETED
+   - ✅ Created PlayerStats model to track player performance metrics
+   - ✅ Implemented calculation logic to update stats when goals are scored
+   - ✅ Added API endpoints to retrieve individual and aggregated player statistics
+   - ✅ Successfully tested player statistics functionality
+3. Next, enhance team standings with additional statistics
+   - Expand TeamStanding model to include more detailed statistics
+   - Add new endpoints for tournament team statistics
+   - Ensure statistics are updated automatically when match results change
 
 Notes:
 - The Goal model has been implemented and working correctly
-- The Player API has been implemented to support player management
-- The test script for goal tracking is working successfully and validating the functionality
-- Next, we need to implement the PlayerStats model which will include fields like:
-  - matches_played
-  - goals_scored (derived from Goal records)
-  - minutes_played
-  - Additional stats like assists could be added in future iterations
-- PlayerStats should be calculated and updated automatically when match results and goals are added
-- Focusing on simplicity first - no report generation functionality needed
+- Player statistics now include matches_played, goals_scored, minutes_played, and calculated ratios
+- Player stats can be filtered by tournament_id or retrieved as overall stats
+- Tournament top scorers functionality is working successfully
+- Next focus should be on enhancing the team statistics with similar functionality

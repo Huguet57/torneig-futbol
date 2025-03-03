@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.api.crud_base import CRUDBase
 from app.models.player_stats import PlayerStats
-from app.schemas.player_stats import PlayerStatsCreate, PlayerStatsUpdate, PlayerStatsBase
+from app.schemas.player_stats import PlayerStatsCreate, PlayerStatsBase
 
 
 class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
@@ -65,7 +65,6 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
         """Get top scorers for a tournament."""
         from app.models.goal import Goal
         from app.models.match import Match
-        from app.models.player import Player
         from sqlalchemy import func, desc
         
         # Count goals by player in matches of the tournament

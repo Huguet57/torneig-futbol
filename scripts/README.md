@@ -168,19 +168,109 @@ The test script successfully demonstrates the complete goal tracking workflow:
 
 The goal tracking shows a total of 5 goals in the match, with Player 1-1 scoring 2 goals and Goal Team 1 scoring a total of 3 goals.
 
-## Upcoming Test Scripts
+### `test_player_stats.py` ✅
 
-### `test_player_stats.py` 🔄
+This script tests the player statistics functionality:
 
-This script will test the player statistics functionality that is currently in development:
+1. Creates a tournament structure with teams and players
+2. Creates matches between teams
+3. Records goals for different players in the matches
+4. Updates match results
+5. Retrieves player statistics for individual players
+6. Gets the top scorers for the tournament
 
-1. Create tournament structure with teams and players
-2. Create matches and record goals
-3. Test player statistics calculation based on goals and matches
-4. Verify player statistics retrieval endpoints
-5. Test statistic updates when new goals are recorded
+#### Status: ✅ Successfully Implemented and Tested
 
-This test will focus on ensuring that player statistics are calculated correctly from match and goal data, and that the statistics can be retrieved through the API endpoints.
+The player statistics functionality has been successfully implemented and verified. This script provides comprehensive testing of the player statistics system, ensuring that statistics are correctly calculated from match and goal data, and can be retrieved through the API endpoints.
+
+#### Usage
+
+Make sure the application is running locally on port 8000, then run:
+
+```bash
+poetry run python scripts/test_player_stats.py
+```
+
+The script will output detailed information about each step in the process, including API responses and player statistics.
+
+#### API Routes
+
+The script uses the following API routes:
+
+- `/api/tournaments/` - Create and manage tournaments
+- `/api/phases/` - Create and manage phases
+- `/api/groups/` - Create and manage groups
+- `/api/teams/` - Create and manage teams
+- `/api/players/` - Create and manage players
+- `/api/matches/` - Create and manage matches
+- `/api/matches/{id}/result` - Update match results
+- `/api/goals/` - Create and manage goals
+- `/api/players/{id}/stats` - Get player statistics
+- `/api/tournaments/{id}/top-scorers` - Get top scorers for a tournament
+
+#### Example Output
+
+```
+Starting player statistics test...
+
+================================================================================
+STEP: Creating tournament
+================================================================================
+
+Tournament created (Status: 200):
+{
+  "id": 1,
+  "name": "Player Stats Test Tournament",
+  "edition": "I",
+  "year": 2023,
+  "start_date": "2023-03-03",
+  "end_date": "2023-04-02",
+  "description": "Tournament for testing player statistics",
+  "logo_url": null
+}
+
+...
+
+================================================================================
+STEP: Getting player statistics for Striker One
+================================================================================
+
+Player statistics:
+{
+  "id": 1,
+  "player_id": 1,
+  "tournament_id": 1,
+  "matches_played": 2,
+  "goals_scored": 3,
+  "minutes_played": 180,
+  "goals_per_match": 1.5,
+  "minutes_per_goal": 60.0
+}
+
+...
+
+================================================================================
+STEP: Getting top scorers for tournament
+================================================================================
+
+Top 5 scorers:
+1. Striker One - 3 goals
+2. Striker Two - 3 goals
+3. Midfielder One - 1 goal
+
+Player statistics test completed successfully!
+```
+
+#### Test Results
+
+The test script successfully demonstrates the complete player statistics workflow:
+
+1. **Tournament Structure**: Creates a tournament, phase, group, teams, and players
+2. **Match and Goal Management**: Creates matches, records goals, and updates results
+3. **Individual Statistics**: Retrieves and verifies statistics for individual players
+4. **Top Scorers**: Gets and displays the top scorers for the tournament
+
+The player statistics show correct calculations for matches played, goals scored, minutes played, and derived statistics like goals per match and minutes per goal.
 
 ## Development Principles
 
