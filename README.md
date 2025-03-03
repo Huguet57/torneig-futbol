@@ -18,11 +18,10 @@ The documentation for this project has been organized into multiple files for ea
 - [x] Initial planning and architecture design
 - [x] MVP 1: Tournament and Team Structure
 - [x] MVP 2: Match Management
-- [ ] MVP 3: Statistics and Reporting (In Progress)
-  - [x] Goal tracking functionality
-  - [ ] Player statistics
-  - [ ] Team statistics
-  - [ ] Report generation
+- [ ] MVP 3: Player Statistics (In Progress)
+  - [x] Goal tracking functionality ✅ (Completed with tests)
+  - [ ] Player statistics (In Progress)
+  - [ ] Team statistics enhancement
 
 ## Features
 
@@ -33,7 +32,6 @@ The system supports the following core features:
 - Match scheduling and results tracking
 - Automatic standings calculations
 - Player and team statistics
-- Exportable reports
 
 ## Getting Started
 

@@ -27,6 +27,7 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Always develop a module and add the tests just after. Don't add several modules that can be filled with errors
 - When implementing API endpoints, ensure all URLs have trailing slashes for consistency
 - When creating new API endpoints, make sure to update the main.py file to include the new router
+- Strive for simplicity first - implement only what's necessary and avoid feature creep
 
 ## Cursor learned
 
@@ -49,7 +50,7 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 
 Previous task: Implementing MVP 1 - Tournament and Team Structure ✅
 Previous task: Implementing MVP 2 - Match Management ✅
-Current task: Implementing MVP 3 - Player Statistics and Reporting 🔄
+Current task: Implementing MVP 3 - Player Statistics 🔄
 
 [X] Set up project structure
   [X] Create directory structure
@@ -123,7 +124,7 @@ Current task: Implementing MVP 3 - Player Statistics and Reporting 🔄
   [X] Validate UI functionality for match management
   [X] Create and run end-to-end test script
 
-[ ] MVP 3: Player Statistics and Reporting
+[ ] MVP 3: Player Statistics
   [X] Create Goal model and schemas
     [X] Implement Goal database model
     [X] Create Goal schemas with validation
@@ -132,6 +133,7 @@ Current task: Implementing MVP 3 - Player Statistics and Reporting 🔄
     [X] Create test script for goal tracking
     [X] Update API documentation with goal endpoints
     [X] Implement Player API for player management
+    [X] Test goal tracking functionality ← Completed!
   [ ] Implement Player Statistics tracking
     [ ] Create PlayerStats model and schema
     [ ] Implement statistics calculation logic
@@ -140,33 +142,29 @@ Current task: Implementing MVP 3 - Player Statistics and Reporting 🔄
     [ ] Enhance TeamStanding model for more detailed stats
     [ ] Create aggregate tournament team statistics
     [ ] Add API endpoints for team statistics
-  [ ] Create Report Generation functionality
-    [ ] Implement tournament summary reports
-    [ ] Add player performance reports
-    [ ] Create exportable formats (CSV, PDF)
-  [ ] Add UI for Statistics and Reports
-    [ ] Create statistics dashboard
-    [ ] Implement player statistics view
-    [ ] Add report generation and export interface
   [ ] Develop unit and integration tests
-    [ ] Test goal tracking functionality
     [ ] Test player statistics calculations
-    [ ] Test report generation
   [ ] Add documentation
     [ ] Update API documentation with statistics endpoints
-    [ ] Create statistics and reporting guide
     [ ] Update README with new features
 
-Next steps:
-1. ✅ First implement the Goal model and related functionality
-2. Next, build player statistics tracking on top of goal data
-   - Create PlayerStats model to track player performance
+Current milestone completed: Goal tracking functionality ✅
+Next tasks to implement:
+1. ✅ First implement the Goal model and related functionality - COMPLETED
+2. Next, build player statistics tracking on top of goal data - IN PROGRESS
+   - Create PlayerStats model to track player performance metrics
    - Implement calculation logic to update stats when goals are scored
-   - Add API endpoints to retrieve player statistics
-3. Finally implement report generation functionality
+   - Add API endpoints to retrieve individual and aggregated player statistics
+3. Finally enhance team standings with additional statistics
 
 Notes:
-- The Goal model is now implemented and working correctly
+- The Goal model has been implemented and working correctly
 - The Player API has been implemented to support player management
-- The test script for goal tracking is working successfully
-- Next, we need to implement player statistics tracking based on goals scored
+- The test script for goal tracking is working successfully and validating the functionality
+- Next, we need to implement the PlayerStats model which will include fields like:
+  - matches_played
+  - goals_scored (derived from Goal records)
+  - minutes_played
+  - Additional stats like assists could be added in future iterations
+- PlayerStats should be calculated and updated automatically when match results and goals are added
+- Focusing on simplicity first - no report generation functionality needed

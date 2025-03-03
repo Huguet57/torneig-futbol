@@ -106,10 +106,45 @@ This document outlines the API endpoints for the Soccer Tournament Management Sy
   - Supports pagination with skip and limit parameters
 
 ## Statistics
+
+### Team Statistics
 - `GET /standings/group/{id}`: Get group standings
   - Returns calculated standings for all teams in a group
   - Includes matches played, wins, draws, losses, goals, and points
   - Sorted by points (descending) and goal difference
 
-- `GET /tournaments/{id}/players/stats`: Get player statistics for tournament
-- `GET /tournaments/{id}/teams/stats`: Get team statistics for tournament 
+### Player Statistics (In Development)
+The following endpoints for player statistics are currently under development:
+
+- `GET /player-stats/{id}`: Get player statistics by player ID
+  - Returns complete statistics for a specific player
+  - Includes matches played, goals scored, minutes played
+
+- `GET /player-stats/tournament/{id}`: Get all player statistics for a tournament
+  - Returns statistics for all players in a tournament
+  - Supports filtering by top scorers, position, and team
+  - Includes pagination with skip and limit parameters
+
+- `GET /player-stats/team/{id}`: Get player statistics for a team
+  - Returns statistics for all players in a specific team
+  - Useful for team performance analysis
+  - Supports pagination and sorting options
+
+- `GET /player-stats/match/{id}`: Get player statistics for a specific match
+  - Returns statistics for all players who participated in a match
+  - Shows players who scored goals with goal details
+
+- `POST /player-stats/recalculate/{player_id}`: Recalculate statistics for a player
+  - Triggers recalculation of statistics based on recorded goals and matches
+  - Admin-only endpoint for data maintenance
+
+## Implementation Philosophy
+
+The API implementation follows these principles:
+
+1. **Simplicity First**: Endpoints are designed to be straightforward and intuitive
+2. **Consistent Response Format**: All endpoints return data in a consistent JSON structure
+3. **Error Handling**: Clear error messages with appropriate HTTP status codes
+4. **Pagination**: List endpoints support pagination for efficient data retrieval
+5. **Filtering**: Support for filtering data to retrieve only what's needed
+6. **Performance**: Optimized queries to ensure fast response times 
