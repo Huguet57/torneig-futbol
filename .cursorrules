@@ -17,6 +17,12 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Use poetry to run tests or anything python related.
 - Include info useful for debugging in the program output.
 - Read the file before you try to edit it.
+- Use Ruff for linting and formatting Python code as it's faster and more comprehensive than flake8/black
+- Set up pre-commit hooks to ensure code quality before committing changes
+- Create shell scripts for common development tasks to improve workflow efficiency
+- Document code quality practices in a separate file for better onboarding
+- Address linting issues incrementally, starting with auto-fixable ones
+- Pay attention to SQLAlchemy and Pydantic deprecation warnings to future-proof the codebase
 
 ## Cursor learned
 
