@@ -1,6 +1,8 @@
 from typing import Optional
 
 from pydantic import BaseModel, Field
+from app.schemas.player import Player
+from app.schemas.tournament import Tournament
 
 
 class PlayerStatsBase(BaseModel):
@@ -17,6 +19,8 @@ class PlayerStats(PlayerStatsBase):
     id: int
     player_id: Optional[int] = None
     tournament_id: int
+    player: Optional[Player] = None
+    tournament: Optional[Tournament] = None
 
     model_config = {"from_attributes": True}
 

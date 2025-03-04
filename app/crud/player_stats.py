@@ -33,6 +33,16 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
         db.add(stats)
         db.commit()
         db.refresh(stats)
+        
+        # Load relationships
+        from sqlalchemy.orm import joinedload
+        stats = db.query(self.model).options(
+            joinedload(self.model.player),
+            joinedload(self.model.tournament)
+        ).filter(
+            self.model.id == stats.id
+        ).first()
+        
         return stats
     
     def remove(self, db: Session, *, id: int) -> PlayerStats:
@@ -70,6 +80,7 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
         from app.models.goal import Goal
         from app.models.match import Match
         from sqlalchemy import func, desc
+        from sqlalchemy.orm import joinedload
         
         # Count goals by player in matches of the tournament
         goals_by_player = (
@@ -89,7 +100,14 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
         top_scorers = []
         for player_id, goal_count in goals_by_player:
             # Get or create stats for this player in this tournament
-            stats = self.get_by_player_tournament(db, player_id=player_id, tournament_id=tournament_id)
+            stats = db.query(self.model).options(
+                joinedload(self.model.player),
+                joinedload(self.model.tournament)
+            ).filter(
+                self.model.player_id == player_id,
+                self.model.tournament_id == tournament_id
+            ).first()
+            
             if not stats:
                 stats = self.create_for_player(db, player_id=player_id, tournament_id=tournament_id)
                 
