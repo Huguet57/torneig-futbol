@@ -113,7 +113,7 @@ This document outlines the API endpoints for the Soccer Tournament Management Sy
   - Includes matches played, wins, draws, losses, goals, and points
   - Sorted by points (descending) and goal difference
 
-#### Enhanced Team Statistics
+### Enhanced Team Statistics
 The following team statistics endpoints are now available:
 
 - `GET /team-stats/`: Get all team statistics

@@ -45,6 +45,9 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - When creating schemas that require relationships, make sure to include the foreign key fields in both the model and schema
 - When designing API endpoints that retrieve or create resources with optional filtering, ensure all possible filter combinations are handled correctly (e.g., optional tournament_id in player statistics)
 - For statistics calculation functionality, always ensure proper update triggers are in place when related data changes, and include explicit update methods that can be called when needed
+- When fixing database-related issues, check if the necessary database tables exist and consider using Base.metadata.create_all(bind=engine) to create tables directly from models
+- Always verify that auxiliary methods required by core functionality are implemented (such as get_all_by_fields in the Match CRUD module)
+- When running a FastAPI server, make sure to kill previous instances before starting a new one to avoid "Address already in use" errors
 
 # Scratchpad
 
@@ -52,7 +55,7 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 
 Previous task: Implementing MVP 1 - Tournament and Team Structure ✅
 Previous task: Implementing MVP 2 - Match Management ✅
-Current task: Implementing MVP 3 - Player Statistics 🔄
+Current task: Implementing MVP 3 - Player Statistics ✅
 
 [X] Set up project structure
   [X] Create directory structure
@@ -126,7 +129,7 @@ Current task: Implementing MVP 3 - Player Statistics 🔄
   [X] Validate UI functionality for match management
   [X] Create and run end-to-end test script
 
-[ ] MVP 3: Player Statistics
+[X] MVP 3: Player Statistics
   [X] Create Goal model and schemas
     [X] Implement Goal database model
     [X] Create Goal schemas with validation
@@ -141,34 +144,41 @@ Current task: Implementing MVP 3 - Player Statistics 🔄
     [X] Implement statistics calculation logic
     [X] Add API endpoints for player statistics
     [X] Test player statistics functionality ← Completed!
-  [ ] Implement Team Statistics
-    [ ] Enhance TeamStanding model for more detailed stats
-    [ ] Create aggregate tournament team statistics
-    [ ] Add API endpoints for team statistics
-  [ ] Develop unit and integration tests
+  [X] Implement Team Statistics
+    [X] Enhance TeamStanding model for more detailed stats
+    [X] Create aggregate tournament team statistics
+    [X] Add API endpoints for team statistics
+    [X] Fix issues with team statistics calculation
+    [X] Add database migration for team stats
+  [X] Develop unit and integration tests
     [X] Test player statistics calculations ← Completed!
-    [ ] Test team statistics calculations
-  [ ] Add documentation
+    [X] Test team statistics calculations ← Completed!
+  [X] Add documentation
     [X] Update API documentation with player statistics endpoints
-    [ ] Update API documentation with team statistics endpoints
+    [X] Update API documentation with team statistics endpoints
     [X] Update README with new features
 
-Current milestone completed: Player statistics tracking ✅
-Next tasks to implement:
-1. ✅ First implement the Goal model and related functionality - COMPLETED
-2. ✅ Build player statistics tracking on top of goal data - COMPLETED
-   - ✅ Created PlayerStats model to track player performance metrics
-   - ✅ Implemented calculation logic to update stats when goals are scored
-   - ✅ Added API endpoints to retrieve individual and aggregated player statistics
-   - ✅ Successfully tested player statistics functionality
-3. Next, enhance team standings with additional statistics
-   - Expand TeamStanding model to include more detailed statistics
-   - Add new endpoints for tournament team statistics
-   - Ensure statistics are updated automatically when match results change
+Next: MVP 4 Planning:
+The Soccer Tournament Management System has now successfully completed MVP 3, with all functionality for tracking player and team statistics working correctly. 
 
-Notes:
-- The Goal model has been implemented and working correctly
-- Player statistics now include matches_played, goals_scored, minutes_played, and calculated ratios
-- Player stats can be filtered by tournament_id or retrieved as overall stats
-- Tournament top scorers functionality is working successfully
-- Next focus should be on enhancing the team statistics with similar functionality
+Key accomplishments in MVP 3:
+1. Implemented Goal model for tracking goals scored in matches
+2. Created PlayerStats system to track player performance metrics
+3. Enhanced team statistics with detailed performance metrics
+4. Implemented API endpoints for retrieving and updating statistics
+5. Developed test scripts to verify functionality
+6. Fixed database and endpoint issues for reliable operation
+
+Lessons learned during implementation:
+- Always verify database tables exist before testing new functionality
+- Ensure auxiliary methods required by core functionality are implemented
+- Check for proper imports and dependencies between modules
+- Validate that related database models are connected correctly
+- Kill previous server instances before starting new ones
+
+Next steps for MVP 4 - Advanced Features:
+[ ] Phase progression rules
+[ ] Tournament templates
+[ ] Automatic scheduling
+[ ] Improved UI/UX
+[ ] Complete test coverage

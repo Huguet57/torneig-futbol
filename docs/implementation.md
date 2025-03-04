@@ -69,11 +69,9 @@ This document outlines the implementation details for the Soccer Tournament Mana
 
 ### Derived Entities (For Calculations)
 
-#### TeamStanding
+#### TeamStats
 - `id`: Unique identifier
 - `tournament_id`: Reference to Tournament
-- `phase_id`: Reference to Phase
-- `group_id`: Reference to Group
 - `team_id`: Reference to Team
 - `matches_played`: Number of matches played
 - `wins`: Number of wins
@@ -81,8 +79,14 @@ This document outlines the implementation details for the Soccer Tournament Mana
 - `losses`: Number of losses
 - `goals_for`: Goals scored
 - `goals_against`: Goals conceded
-- `goal_difference`: Goal difference
+- `goal_difference`: Goal difference (calculated)
+- `clean_sheets`: Number of matches without conceding goals
 - `points`: Total points
+- `position`: Team position in tournament (nullable)
+- `win_percentage`: Percentage of matches won (calculated)
+- `goals_per_match`: Average goals per match (calculated)
+- `points_per_match`: Average points per match (calculated)
+- Implementation Status: ✅ Completed
 
 #### PlayerStats
 - `id`: Unique identifier
@@ -100,7 +104,7 @@ This document outlines the implementation details for the Soccer Tournament Mana
 ### Backend
 - **Programming Language**: Python
 - **Web Framework**: FastAPI
-- **Database**: PostgreSQL
+- **Database**: SQLite (development) / PostgreSQL (production)
 - **ORM**: SQLAlchemy
 - **Authentication**: JWT
 - **API Documentation**: Swagger/OpenAPI
@@ -121,15 +125,17 @@ This document outlines the implementation details for the Soccer Tournament Mana
 - ✅ Goal tracking system
 - ✅ Player statistics tracking and calculations
 - ✅ Tournament top scorers functionality
+- ✅ Enhanced team statistics with performance metrics
 
-### In Progress
-- 🔄 Team statistics enhancement
-
-### Upcoming Work
+### Upcoming Work for MVP 4
+- Phase progression rules
+- Tournament templates
+- Automatic scheduling
 - UI improvements for statistics visualization
 - Advanced reporting capabilities
 
 ### Development Philosophy
 - Focus on simplicity and core functionality
 - Implement features incrementally with thorough testing
-- Prioritize stability and performance over feature abundance 
+- Prioritize stability and performance over feature abundance
+- Ensure comprehensive error handling and validation 

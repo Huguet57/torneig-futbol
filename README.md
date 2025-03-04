@@ -18,10 +18,15 @@ The documentation for this project has been organized into multiple files for ea
 - [x] Initial planning and architecture design
 - [x] MVP 1: Tournament and Team Structure
 - [x] MVP 2: Match Management
-- [ ] MVP 3: Player Statistics (In Progress)
-  - [x] Goal tracking functionality ✅ (Completed with tests)
-  - [x] Player statistics ✅ (Completed with tournament-specific filtering)
-  - [ ] Team statistics enhancement (Next up)
+- [x] MVP 3: Player Statistics
+  - [x] Goal tracking functionality
+  - [x] Player statistics with tournament-specific filtering
+  - [x] Team statistics with performance metrics
+- [ ] MVP 4: Advanced Features (Next up)
+  - [ ] Phase progression rules
+  - [ ] Tournament templates
+  - [ ] Automatic scheduling
+  - [ ] Improved UI/UX
 
 ## Features
 
@@ -32,6 +37,8 @@ The system supports the following core features:
 - Match scheduling and results tracking
 - Automatic standings calculations
 - Player and team statistics
+- Goal tracking system
+- Performance metrics calculation
 
 ## Getting Started
 
@@ -56,12 +63,18 @@ The system supports the following core features:
    poetry run pre-commit install
    ```
 
-4. Run the application
+4. Initialize the database
+   ```bash
+   poetry run python scripts/create_tables.py
+   poetry run python scripts/init_db.py
+   ```
+
+5. Run the application
    ```bash
    poetry run uvicorn app.main:app --reload
    ```
 
-5. Access the API documentation
+6. Access the API documentation
    ```
    http://localhost:8000/docs
    ```
@@ -87,6 +100,12 @@ The project includes test scripts to verify functionality:
    poetry run python scripts/test_player_stats.py
    ```
    This script tests the player statistics functionality, calculating and retrieving player stats and tournament top scorers.
+
+4. Team Statistics Test
+   ```bash
+   poetry run python scripts/test_team_stats.py
+   ```
+   This script tests the team statistics functionality, updating team stats from match results and retrieving team rankings.
 
 For more details on testing, see the [scripts README](scripts/README.md).
 
