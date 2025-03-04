@@ -269,3 +269,274 @@ Weekly milestones:
 - Week 2: Code refactoring for maintainability
 - Week 3: Database and ORM optimization
 - Week 4: Testing, documentation and developer experience improvements
+
+## Frontend Development Plan - React Mobile-First UI
+
+### Technology Stack
+- Framework: React with TypeScript
+- UI Components: Material-UI (MUI) - Popular, well-documented, and mobile-friendly
+- State Management: Redux Toolkit - Industry standard with good TypeScript support
+- Routing: React Router - Standard routing solution
+- Forms: Formik + Yup - Simple form handling and validation
+- Testing: Jest + React Testing Library - Standard testing tools
+- Build Tool: Vite - Fast and modern build tool
+- API Client: Axios - Well-known HTTP client
+
+### MVP Planning
+
+#### MVP 1: Core Tournament Views 🎯
+[ ] Project Setup
+  [ ] Initialize React + TypeScript project with Vite
+  [ ] Set up Material-UI with responsive theme
+  [ ] Configure React Router
+  [ ] Set up Redux store and API client
+  [ ] Create basic layout components
+
+[ ] Tournament Management
+  [ ] Tournament List View
+    [ ] Mobile-friendly grid/list with MUI Cards
+    [ ] Tournament summary cards
+    [ ] Action buttons (view, edit, delete)
+  [ ] Tournament Detail View
+    [ ] Responsive tournament header
+    [ ] Tab navigation for phases/groups
+    [ ] Team list with standings
+  [ ] Tournament Creation/Edit
+    [ ] Step-by-step form with Formik
+    [ ] Phase and group configuration
+    [ ] Team management interface
+
+#### MVP 2: Match Management 📅
+[ ] Match Views
+  [ ] Match Schedule
+    [ ] Mobile-optimized calendar
+    [ ] Filterable match list
+    [ ] Match summary cards
+  [ ] Match Detail
+    [ ] Real-time score display
+    [ ] Goal recording interface
+    [ ] Player performance view
+  [ ] Match Creation/Edit
+    [ ] Team selector
+    [ ] MUI DateTimePicker
+    [ ] Location input
+
+#### MVP 3: Statistics and Dashboard 📊
+[ ] Statistics Views
+  [ ] Tournament Dashboard
+    [ ] MUI Data Grid for stats
+    [ ] Recent matches list
+    [ ] Top scorers board
+  [ ] Team Statistics
+    [ ] Team performance cards
+    [ ] Player roster table
+    [ ] Match history timeline
+  [ ] Player Statistics
+    [ ] Player profile cards
+    [ ] Goal tracking
+    [ ] Match participation log
+
+### Component Examples
+
+1. Tournament Card Component:
+```tsx
+import { Card, CardContent, CardActions, Typography, Button } from '@mui/material';
+
+interface TournamentCardProps {
+  tournament: {
+    id: number;
+    name: string;
+    startDate: string;
+    teamsCount: number;
+  };
+  onView: (id: number) => void;
+}
+
+export const TournamentCard = ({ tournament, onView }: TournamentCardProps) => {
+  return (
+    <Card sx={{ maxWidth: 345, m: 1 }}>
+      <CardContent>
+        <Typography variant="h6">{tournament.name}</Typography>
+        <Typography color="text.secondary">
+          Starts: {new Date(tournament.startDate).toLocaleDateString()}
+        </Typography>
+        <Typography>
+          {tournament.teamsCount} Teams
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small" onClick={() => onView(tournament.id)}>
+          View Details
+        </Button>
+      </CardActions>
+    </Card>
+  );
+};
+```
+
+2. Mobile Navigation:
+```tsx
+import { BottomNavigation, BottomNavigationAction } from '@mui/material';
+import { 
+  SportsSoccer, 
+  EmojiEvents, 
+  Groups, 
+  Assessment 
+} from '@mui/icons-material';
+
+export const MobileNav = () => {
+  const [value, setValue] = useState(0);
+
+  return (
+    <BottomNavigation
+      value={value}
+      onChange={(event, newValue) => setValue(newValue)}
+      sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+    >
+      <BottomNavigationAction label="Matches" icon={<SportsSoccer />} />
+      <BottomNavigationAction label="Tournaments" icon={<EmojiEvents />} />
+      <BottomNavigationAction label="Teams" icon={<Groups />} />
+      <BottomNavigationAction label="Stats" icon={<Assessment />} />
+    </BottomNavigation>
+  );
+};
+```
+
+3. Match Score Input:
+```tsx
+import { 
+  Card, 
+  CardContent, 
+  Typography, 
+  TextField, 
+  Button 
+} from '@mui/material';
+
+interface ScoreInputProps {
+  match: {
+    id: number;
+    homeTeam: string;
+    awayTeam: string;
+    homeScore?: number;
+    awayScore?: number;
+  };
+  onSave: (matchId: number, homeScore: number, awayScore: number) => void;
+}
+
+export const ScoreInput = ({ match, onSave }: ScoreInputProps) => {
+  const [homeScore, setHomeScore] = useState(match.homeScore || 0);
+  const [awayScore, setAwayScore] = useState(match.awayScore || 0);
+
+  return (
+    <Card>
+      <CardContent>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <Typography>{match.homeTeam}</Typography>
+          <TextField
+            type="number"
+            value={homeScore}
+            onChange={(e) => setHomeScore(Number(e.target.value))}
+            inputProps={{ min: 0 }}
+          />
+          <Typography>vs</Typography>
+          <TextField
+            type="number"
+            value={awayScore}
+            onChange={(e) => setAwayScore(Number(e.target.value))}
+            inputProps={{ min: 0 }}
+          />
+          <Typography>{match.awayTeam}</Typography>
+        </div>
+        <Button
+          variant="contained"
+          onClick={() => onSave(match.id, homeScore, awayScore)}
+        >
+          Save Score
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+```
+
+### Development Approach
+1. **Week 1: Foundation**
+   - Set up React + TypeScript + Vite
+   - Install and configure Material-UI
+   - Create responsive layout components
+   - Set up Redux store and API integration
+
+2. **Week 2: Tournament Module**
+   - Tournament list and detail views
+   - Tournament creation flow
+   - Phase and group management
+   - Team assignment interface
+
+3. **Week 3: Match Module**
+   - Match scheduling interface
+   - Score recording system
+   - Match detail views
+   - Calendar integration
+
+4. **Week 4: Statistics & Polish**
+   - Statistics dashboards
+   - Performance optimizations
+   - Testing and bug fixes
+   - Documentation
+
+### Key Features to Implement
+1. **Smart Navigation**
+   - Bottom navigation for mobile
+   - Breadcrumbs for deep linking
+   - Recent items quick access
+   - Search functionality
+
+2. **Offline Support**
+   - Cache tournament data
+   - Offline match recording
+   - Background sync
+   - Error recovery
+
+3. **Real-time Updates**
+   - Live score updates
+   - Match status changes
+   - Statistics recalculation
+   - Notification system
+
+4. **Data Entry Optimization**
+   - Quick action shortcuts
+   - Form auto-save
+   - Bulk operations
+   - Data validation
+
+### Testing Strategy
+1. **Unit Tests**
+   - Component rendering
+   - Hook behavior
+   - Utility functions
+   - Form validation
+
+2. **Integration Tests**
+   - User flows
+   - API integration
+   - State management
+   - Error handling
+
+3. **E2E Tests**
+   - Critical paths
+   - Mobile interactions
+   - Offline behavior
+   - Performance metrics
+
+### Accessibility Requirements
+- WCAG 2.1 AA compliance
+- Keyboard navigation
+- Screen reader support
+- High contrast mode
+- Focus management
+
+### Performance Targets
+- First Contentful Paint < 1.5s
+- Time to Interactive < 3s
+- Lighthouse score > 90
+- Bundle size < 200KB (initial load)
