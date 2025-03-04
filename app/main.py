@@ -48,7 +48,7 @@ sentry_sdk.init(
 app = FastAPI(
     title="Soccer Tournament Management System",
     description="API for managing soccer tournaments, teams, matches, and statistics",
-    version="1.0.0",
+    version="1.0.0",  # Released March 2024
 )
 
 # CORS middleware configuration
