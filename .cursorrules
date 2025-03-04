@@ -71,6 +71,14 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Check template file names and paths carefully when debugging template not found errors, as the actual file name might differ from what's referenced in the code
 - When implementing API endpoints that accept both URL path parameters and request body data, ensure that the request body schema matches the expected input, especially when using Pydantic models for validation
 - For team-related endpoints that handle players, ensure that the team_id is properly validated in both the URL path and request body to maintain data consistency
+- When using SQLAlchemy with SQLite and foreign key constraints, use text("PRAGMA foreign_keys = ON") to enable foreign key support
+- When testing database integrity constraints, ensure the database engine supports and has enabled the constraints you're testing
+- When working with templates, ensure that template file names match exactly what's used in the code (e.g., 'view.html' vs 'detail.html')
+- When returning template responses, include all necessary context variables that templates expect
+- Keep template naming conventions consistent across the application (e.g., using 'view.html' for detail views)
+- When testing template responses, verify both the status code and the presence of expected context variables
+- For form submissions, decide between redirects (303) and direct template responses (200) based on UX requirements
+- When filtering data in template views, include both the filter value and the filtered object in the context when needed
 
 # Scratchpad
 
@@ -80,7 +88,6 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Completed: MVP 1 - Tournament and Team Structure ✅
 - Completed: MVP 2 - Match Management ✅ 
 - Completed: MVP 3 - Player Statistics ✅
-- Completed: Converting script tests to pytest tests ✅
 - Current: MVP 4 - Backend Quality & Scalability 🔄
 
 ### Completed MVPs Summary
@@ -138,9 +145,10 @@ Lessons learned during implementation:
   [X] Add comprehensive standings calculation tests
   [X] Add comprehensive API router configuration tests
   [X] Add comprehensive team API tests with 100% coverage
-  [ ] Identify remaining modules with <80% coverage
-  [ ] Add tests for untested edge cases and error conditions
-  [ ] Improve assertion quality and error messages
+  [X] Add comprehensive group API tests with 98% coverage
+  [X] Add comprehensive UI router tests with 83% coverage
+  [X] Identify remaining modules with <80% coverage
+  [X] All modules now have >80% coverage ✅
   [ ] Set up continuous integration
     [ ] Configure GitHub Actions workflow
     [ ] Implement automated test runs with reports
@@ -173,6 +181,39 @@ Lessons learned during implementation:
     [ ] Implement structured logging
     [ ] Add error tracking and reporting
     [ ] Create health check endpoints
+
+### Next Steps
+
+1. Set up CI/CD pipeline with GitHub Actions
+   - Create workflow for running tests
+   - Add code quality checks (Ruff, mypy)
+   - Generate and upload coverage reports
+   - Configure branch protection rules
+
+2. Enhance type safety across the codebase
+   - Add type hints to all functions
+   - Set up mypy for static type checking
+   - Add runtime type validation for critical functions
+
+3. Improve documentation
+   - Update API documentation with examples
+   - Add comprehensive docstrings
+   - Create architecture diagrams
+
+4. Add observability features
+   - Implement structured logging
+   - Add error tracking
+   - Create health check endpoints
+
+### Lessons Learned
+
+- When testing API endpoints that handle relationships (like teams in groups), ensure to test both successful operations and error cases:
+  - Non-existent resources (404 errors)
+  - Invalid operations (400 errors)
+  - Relationship constraints (e.g., removing a team that's not in a group)
+- When testing pagination, store the first page's data to compare with subsequent pages
+- When using a base CRUD class, error messages will be generic (e.g., "Item not found" instead of "Group not found")
+- Test coverage should focus on both successful operations and error cases to ensure robust error handling
 
 ### MVP 4 Development Approach
 

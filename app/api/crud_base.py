@@ -66,18 +66,24 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             return obj
         except IntegrityError as e:
             db.rollback()
-            raise HTTPException(status_code=400, detail=str(e))
+            raise HTTPException(status_code=400, detail=f"Cannot delete item due to existing references: {str(e)}")
 
     def get_all_by_fields(self, db: Session, *, fields: Dict[str, Any], skip: int = 0, limit: int = 100) -> List[ModelType]:
         """Get all records that match the given field values."""
         query = db.query(self.model)
         for field, value in fields.items():
-            query = query.filter(getattr(self.model, field) == value)
+            try:
+                query = query.filter(getattr(self.model, field) == value)
+            except AttributeError:
+                raise HTTPException(status_code=400, detail=f"Invalid field: {field}")
         return query.offset(skip).limit(limit).all()
         
     def get_one_by_fields(self, db: Session, *, fields: Dict[str, Any]) -> Optional[ModelType]:
         """Get a single record that matches the given field values."""
         query = db.query(self.model)
         for field, value in fields.items():
-            query = query.filter(getattr(self.model, field) == value)
+            try:
+                query = query.filter(getattr(self.model, field) == value)
+            except AttributeError:
+                raise HTTPException(status_code=400, detail=f"Invalid field: {field}")
         return query.first()

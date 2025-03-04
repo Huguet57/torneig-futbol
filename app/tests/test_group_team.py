@@ -64,3 +64,46 @@ def test_remove_team_from_group(client, db):
     teams_in_response = data.get("teams", [])
     team_ids = [t["id"] for t in teams_in_response]
     assert team_id not in team_ids
+
+
+def test_add_team_to_group_errors(client, db):
+    """Test error cases when adding a team to a group."""
+    # Create test data
+    tournament = create_test_tournament(db)
+    phase = create_test_phase(db, tournament.id)
+    group = create_test_group(db, phase.id)
+    team = create_test_team(db)
+
+    # Test non-existent group
+    response = client.post(f"/api/groups/99999/teams", json={"team_id": team.id})
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Group not found"
+
+    # Test non-existent team
+    response = client.post(f"/api/groups/{group.id}/teams", json={"team_id": 99999})
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Team not found"
+
+
+def test_remove_team_from_group_errors(client, db):
+    """Test error cases when removing a team from a group."""
+    # Create test data
+    tournament = create_test_tournament(db)
+    phase = create_test_phase(db, tournament.id)
+    group = create_test_group(db, phase.id)
+    team = create_test_team(db)
+
+    # Test non-existent group
+    response = client.delete(f"/api/groups/99999/teams/{team.id}")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Group not found"
+
+    # Test non-existent team
+    response = client.delete(f"/api/groups/{group.id}/teams/99999")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Team not found"
+
+    # Test team not in group
+    response = client.delete(f"/api/groups/{group.id}/teams/{team.id}")
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Team is not in this group"

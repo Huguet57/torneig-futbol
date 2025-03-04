@@ -194,4 +194,148 @@ class TestCRUDBase:
         
         # Test get_one_by_fields with non-existent value
         no_team = crud.get_one_by_fields(db, fields={"name": "Non-existent Team"})
-        assert no_team is None 
+        assert no_team is None
+
+    def test_create_with_integrity_error(self, db: Session):
+        """Test creating an object that violates database integrity."""
+        # Create a test model with a unique constraint
+        from sqlalchemy import Column, Integer, String, UniqueConstraint
+        from app.db.database import Base
+        
+        class TestModel(Base):
+            __tablename__ = "test_model"
+            id = Column(Integer, primary_key=True, index=True)
+            name = Column(String, unique=True)
+        
+        # Create the table
+        Base.metadata.create_all(bind=db.get_bind())
+        
+        # Create CRUD instance
+        from app.api.crud_base import CRUDBase
+        from pydantic import BaseModel
+        
+        class TestSchema(BaseModel):
+            name: str
+        
+        crud = CRUDBase[TestModel, TestSchema, TestSchema](TestModel)
+        
+        # Create first object
+        obj1 = crud.create(db, obj_in=TestSchema(name="test"))
+        assert obj1.name == "test"
+        
+        # Try to create another object with the same name
+        from fastapi import HTTPException
+        import pytest
+        with pytest.raises(HTTPException) as exc_info:
+            crud.create(db, obj_in=TestSchema(name="test"))
+        assert exc_info.value.status_code == 400
+
+    def test_update_with_integrity_error(self, db: Session):
+        """Test updating an object that would violate database integrity."""
+        # Create a test model with a unique constraint
+        from sqlalchemy import Column, Integer, String, UniqueConstraint
+        from app.db.database import Base
+        
+        class TestModel(Base):
+            __tablename__ = "test_model_update"
+            id = Column(Integer, primary_key=True, index=True)
+            name = Column(String, unique=True)
+        
+        # Create the table
+        Base.metadata.create_all(bind=db.get_bind())
+        
+        # Create CRUD instance
+        from app.api.crud_base import CRUDBase
+        from pydantic import BaseModel
+        
+        class TestSchema(BaseModel):
+            name: str
+        
+        crud = CRUDBase[TestModel, TestSchema, TestSchema](TestModel)
+        
+        # Create two objects
+        obj1 = crud.create(db, obj_in=TestSchema(name="test1"))
+        obj2 = crud.create(db, obj_in=TestSchema(name="test2"))
+        
+        # Try to update obj2 with obj1's name
+        from fastapi import HTTPException
+        import pytest
+        with pytest.raises(HTTPException) as exc_info:
+            crud.update(db, db_obj=obj2, obj_in=TestSchema(name="test1"))
+        assert exc_info.value.status_code == 400
+
+    def test_delete_with_integrity_error(self, db: Session):
+        """Test deleting an object that would violate database integrity."""
+        # Enable foreign key support in SQLite
+        from sqlalchemy import text
+        db.execute(text("PRAGMA foreign_keys = ON"))
+        db.commit()
+        
+        # Create test models with foreign key constraint
+        from sqlalchemy import Column, Integer, String, ForeignKey
+        from app.db.database import Base
+        
+        class ParentModel(Base):
+            __tablename__ = "parent_model"
+            id = Column(Integer, primary_key=True, index=True)
+            name = Column(String)
+        
+        class ChildModel(Base):
+            __tablename__ = "child_model"
+            id = Column(Integer, primary_key=True, index=True)
+            parent_id = Column(Integer, ForeignKey("parent_model.id", ondelete="RESTRICT"))
+        
+        # Create the tables
+        Base.metadata.create_all(bind=db.get_bind())
+        
+        # Create CRUD instance
+        from app.api.crud_base import CRUDBase
+        from pydantic import BaseModel
+        
+        class ParentSchema(BaseModel):
+            name: str
+        
+        crud = CRUDBase[ParentModel, ParentSchema, ParentSchema](ParentModel)
+        
+        # Create parent and child
+        parent = crud.create(db, obj_in=ParentSchema(name="parent"))
+        child = ChildModel(parent_id=parent.id)
+        db.add(child)
+        db.commit()
+        
+        # Try to delete parent with existing child
+        from fastapi import HTTPException
+        import pytest
+        with pytest.raises(HTTPException) as exc_info:
+            crud.delete(db, id=parent.id)
+        assert exc_info.value.status_code == 400
+        assert "Cannot delete item due to existing references" in str(exc_info.value.detail)
+
+    def test_get_all_by_fields_with_invalid_field(self, db: Session):
+        """Test get_all_by_fields with a non-existent field."""
+        from sqlalchemy import Column, Integer, String
+        from app.db.database import Base
+        
+        class TestModel(Base):
+            __tablename__ = "test_model_fields"
+            id = Column(Integer, primary_key=True, index=True)
+            name = Column(String)
+        
+        # Create the table
+        Base.metadata.create_all(bind=db.get_bind())
+        
+        # Create CRUD instance
+        from app.api.crud_base import CRUDBase
+        from pydantic import BaseModel
+        
+        class TestSchema(BaseModel):
+            name: str
+        
+        crud = CRUDBase[TestModel, TestSchema, TestSchema](TestModel)
+        
+        # Try to filter by non-existent field
+        from fastapi import HTTPException
+        import pytest
+        with pytest.raises(HTTPException) as exc_info:
+            crud.get_all_by_fields(db, fields={"nonexistent": "value"})
+        assert exc_info.value.status_code == 400 
