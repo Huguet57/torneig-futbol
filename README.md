@@ -22,11 +22,12 @@ The documentation for this project has been organized into multiple files for ea
   - [x] Goal tracking functionality
   - [x] Player statistics with tournament-specific filtering
   - [x] Team statistics with performance metrics
-- [ ] MVP 4: Advanced Features (Next up)
-  - [ ] Phase progression rules
-  - [ ] Tournament templates
-  - [ ] Automatic scheduling
-  - [ ] Improved UI/UX
+- [ ] MVP 4: Backend Quality & Scalability (Next up)
+  - [ ] Comprehensive test suite enhancement
+  - [ ] Code refactoring for maintainability
+  - [ ] Database and ORM optimization
+  - [ ] API performance optimization
+  - [ ] Documentation and developer experience improvements
 
 ## Features
 
