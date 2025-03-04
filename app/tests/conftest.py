@@ -1,7 +1,8 @@
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from fastapi.testclient import TestClient
+from typing import Generator, Any, Callable
 
 from app.db.database import Base, get_db
 from app.main import app
@@ -16,7 +17,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 
 @pytest.fixture(scope="function")
-def db():
+def db() -> Generator[Session, None, None]:
     # Create the database tables
     Base.metadata.create_all(bind=engine)
 
@@ -31,9 +32,9 @@ def db():
 
 
 @pytest.fixture(scope="function")
-def client(db):
+def client(db: Session) -> Generator[TestClient, None, None]:
     # Override the get_db dependency to use the test database
-    def override_get_db():
+    def override_get_db() -> Generator[Session, None, None]:
         try:
             yield db
         finally:
@@ -48,7 +49,7 @@ def client(db):
     app.dependency_overrides.clear()
 
 
-def refresh_objects(db, *objects):
+def refresh_objects(db: Session, *objects: Any) -> None:
     """Refresh multiple objects to avoid detached instance errors."""
     for obj in objects:
         if obj is not None:
@@ -56,6 +57,6 @@ def refresh_objects(db, *objects):
 
 
 @pytest.fixture
-def refresh():
+def refresh() -> Callable[[Session, Any], None]:
     """Fixture to provide the refresh_objects function."""
     return refresh_objects

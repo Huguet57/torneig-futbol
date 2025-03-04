@@ -6,13 +6,14 @@ This script creates all tables defined in the models.
 """
 import os
 import sys
+from typing import NoReturn
 
 # Add the project root to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.db.database import Base, engine
 
-def create_tables():
+def create_tables() -> None:
     """Create all database tables."""
     print("Creating database tables...")
     

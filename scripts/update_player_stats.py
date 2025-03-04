@@ -7,7 +7,7 @@ This script can be run periodically to ensure player statistics are up-to-date.
 import sys
 import os
 import argparse
-from typing import Optional
+from typing import Optional, List, Set, NoReturn
 
 # Add the project root to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -32,12 +32,12 @@ def update_player_stats(
     """
     # Get tournaments to process
     if tournament_id:
-        tournaments = db.query(Tournament).filter(Tournament.id == tournament_id).all()
+        tournaments: List[Tournament] = db.query(Tournament).filter(Tournament.id == tournament_id).all()
         if not tournaments:
             print(f"Tournament with ID {tournament_id} not found.")
             return
     else:
-        tournaments = db.query(Tournament).all()
+        tournaments: List[Tournament] = db.query(Tournament).all()
         print(f"Processing {len(tournaments)} tournaments...")
     
     # Process each tournament
@@ -45,22 +45,22 @@ def update_player_stats(
         print(f"Processing tournament: {tournament.name} ({tournament.edition})")
         
         # Get all matches in the tournament
-        matches = db.query(Match).filter(Match.tournament_id == tournament.id).all()
-        match_ids = [match.id for match in matches]
+        matches: List[Match] = db.query(Match).filter(Match.tournament_id == tournament.id).all()
+        match_ids: List[int] = [match.id for match in matches]
         
         if not match_ids:
             print(f"  No matches found for tournament {tournament.name}")
             continue
         
         # Get all goals in these matches
-        goals = db.query(Goal).filter(Goal.match_id.in_(match_ids)).all()
+        goals: List[Goal] = db.query(Goal).filter(Goal.match_id.in_(match_ids)).all()
         
         if not goals:
             print(f"  No goals found for tournament {tournament.name}")
             continue
         
         # Get unique player IDs from goals
-        player_ids = set(goal.player_id for goal in goals)
+        player_ids: Set[int] = set(goal.player_id for goal in goals)
         
         if player_id:
             # Filter to specific player if requested
@@ -74,13 +74,13 @@ def update_player_stats(
         
         # Process each player
         for pid in player_ids:
-            player = db.query(Player).filter(Player.id == pid).first()
+            player: Optional[Player] = db.query(Player).filter(Player.id == pid).first()
             if not player:
                 print(f"  Warning: Player with ID {pid} not found, skipping...")
                 continue
             
             # Get or create player stats for this tournament
-            stats = db.query(PlayerStats).filter(
+            stats: Optional[PlayerStats] = db.query(PlayerStats).filter(
                 PlayerStats.player_id == pid,
                 PlayerStats.tournament_id == tournament.id
             ).first()
@@ -103,15 +103,15 @@ def update_player_stats(
                 db.add(stats)
             
             # Get player's goals in this tournament
-            player_goals = [g for g in goals if g.player_id == pid]
+            player_goals: List[Goal] = [g for g in goals if g.player_id == pid]
             
             # Count goals by type
-            regular_goals = sum(1 for g in player_goals if g.type == "regular")
-            penalty_goals = sum(1 for g in player_goals if g.type == "penalty")
-            own_goals = sum(1 for g in player_goals if g.type == "own_goal")
+            regular_goals: int = sum(1 for g in player_goals if g.type == "regular")
+            penalty_goals: int = sum(1 for g in player_goals if g.type == "penalty")
+            own_goals: int = sum(1 for g in player_goals if g.type == "own_goal")
             
             # Count matches played (matches where the player scored)
-            matches_with_goals = set(g.match_id for g in player_goals)
+            matches_with_goals: Set[int] = set(g.match_id for g in player_goals)
             
             # Update stats
             stats.goals = regular_goals + penalty_goals
@@ -139,7 +139,7 @@ def update_player_stats(
     print("Player statistics update completed.")
 
 
-def main():
+def main() -> None:
     """Main function to parse arguments and run the update."""
     parser = argparse.ArgumentParser(description="Update player statistics based on goals.")
     parser.add_argument(
@@ -152,7 +152,7 @@ def main():
     args = parser.parse_args()
     
     # Create database session
-    db = SessionLocal()
+    db: Session = SessionLocal()
     try:
         update_player_stats(db, tournament_id=args.tournament, player_id=args.player)
     finally:
