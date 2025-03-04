@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Tournament Statistics</h1>
+    
+    <!-- Tournament Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" action="/stats" class="row g-3 align-items-end">
+                <div class="col-md-6">
+                    <label for="tournament_id" class="form-label">Filter by Tournament</label>
+                    <select name="tournament_id" id="tournament_id" class="form-select">
+                        <option value="">All Tournaments</option>
+                        {% for tournament in tournaments %}
+                        <option value="{{ tournament.id }}" {% if selected_tournament_id == tournament.id %}selected{% endif %}>
+                            {{ tournament.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Summary Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Matches</h5>
+                    <p class="card-text display-4">{{ total_matches }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Goals</h5>
+                    <p class="card-text display-4">{{ total_goals }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Goals per Match</h5>
+                    <p class="card-text display-4">{{ "%.2f"|format(goals_per_match) }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Clean Sheets</h5>
+                    <p class="card-text display-4">{{ total_clean_sheets }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Scorers -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Top Scorers</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Player</th>
+                                    <th>Team</th>
+                                    <th>Goals</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in top_scorers %}
+                                <tr onclick="window.location='/players/{{ stat.player.id if stat.player else '' }}'">
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ stat.player.name if stat.player else 'Unknown Player' }}</td>
+                                    <td>{{ stat.player.team.name if stat.player and stat.player.team else 'Unknown Team' }}</td>
+                                    <td>{{ stat.goals_scored }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No player statistics available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Team Rankings -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Team Rankings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Team</th>
+                                    <th>P</th>
+                                    <th>W</th>
+                                    <th>D</th>
+                                    <th>L</th>
+                                    <th>GD</th>
+                                    <th>Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in team_stats %}
+                                <tr onclick="window.location='/teams/{{ stat.team.id if stat.team else '' }}'">
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ stat.team.name if stat.team else 'Unknown Team' }}</td>
+                                    <td>{{ stat.matches_played }}</td>
+                                    <td>{{ stat.wins }}</td>
+                                    <td>{{ stat.draws }}</td>
+                                    <td>{{ stat.losses }}</td>
+                                    <td>{{ stat.goal_difference }}</td>
+                                    <td><strong>{{ stat.points }}</strong></td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center">No team statistics available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

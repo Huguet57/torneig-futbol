@@ -61,6 +61,14 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - When a CRUD module is needed but not available in the app.crud namespace, check if there's a direct CRUD implementation in the API file (e.g., crud_tournament in tournament.py) and use that instead
 - In test assertions for API responses, be aware that some fields might be recalculated by the API and may not match the values you initially set
 - When fixing failing tests, first identify if the issue is with the test expectations or with the actual implementation
+- When working with templates, always add null checks for object attributes to prevent template rendering errors (e.g., `{{ object.attribute if object else 'Default' }}`)
+- For RESTful APIs, standardize error responses: return 404 for non-existent resources rather than 200 with empty data
+- When updating tests, ensure they reflect the actual behavior of the application, not the expected behavior
+- In Jinja2 templates, use conditional checks to handle potential None values in nested objects (e.g., `{{ obj.related.name if obj and obj.related else 'Unknown' }}`)
+- When creating UI templates, ensure they handle edge cases like missing or incomplete data gracefully
+- When updating imports, ensure that modules are imported from their correct locations, especially when CRUD operations are defined in API files rather than dedicated CRUD modules
+- For FastAPI applications using Starlette's TemplateResponse, use the new parameter order with request as the first parameter to avoid deprecation warnings
+- Check template file names and paths carefully when debugging template not found errors, as the actual file name might differ from what's referenced in the code
 
 # Scratchpad
 
@@ -110,6 +118,20 @@ Lessons learned during implementation:
 [X] Fix failing tests
   [X] Fix player-stats API tests
   [X] Fix player API tests
+  [X] Fix API endpoints integration tests
+  [X] Fix UI router tests
+  [X] Create missing templates and static files
+  [X] Add null checks to templates to handle missing data
+[X] UI Enhancements
+  [X] Create team list and detail templates
+  [X] Create stats overview template
+  [X] Create player stats template
+  [X] Add CSS and JS for better user experience
+  [X] Ensure responsive design for all templates
+[X] Fix test warnings
+  [X] Update TemplateResponse parameter order to avoid deprecation warnings
+  [X] Fix import issues with CRUD modules
+  [X] Update template references to match actual file names
 [ ] Comprehensive Test Suite Enhancement
   [ ] Improve unit test coverage
     [ ] Identify modules with <90% coverage

@@ -7,7 +7,7 @@ from app.models.tournament import Tournament as TournamentModel
 from app.schemas.tournament import Tournament, TournamentCreate, TournamentUpdate
 from app.schemas.player_stats import PlayerStats
 from app.api.crud_base import CRUDBase
-from app import crud
+from app.crud import player_stats as crud_player_stats
 
 router = APIRouter()
 crud_tournament = CRUDBase[TournamentModel, TournamentCreate, TournamentUpdate](TournamentModel)
@@ -76,6 +76,6 @@ def get_tournament_top_scorers(
         raise HTTPException(status_code=404, detail="Tournament not found")
     
     # Get top scorers
-    return crud.player_stats.get_tournament_top_scorers(
+    return crud_player_stats.get_tournament_top_scorers(
         db=db, tournament_id=tournament_id, limit=limit
     )

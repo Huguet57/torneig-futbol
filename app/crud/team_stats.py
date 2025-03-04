@@ -10,6 +10,10 @@ from app.schemas.team_stats import TeamStatsCreate, TeamStatsUpdate
 class CRUDTeamStats(CRUDBase[TeamStats, TeamStatsCreate, TeamStatsUpdate]):
     """CRUD operations for team statistics."""
     
+    def get_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> List[TeamStats]:
+        """Get multiple team statistics with pagination."""
+        return db.query(self.model).offset(skip).limit(limit).all()
+    
     def get_by_team_id(self, db: Session, team_id: int) -> Optional[TeamStats]:
         """Get team statistics by team ID."""
         return db.query(TeamStats).filter(TeamStats.team_id == team_id).first()

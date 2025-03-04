@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Player Statistics</h1>
+    
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" action="/player-stats" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="tournament_id" class="form-label">Tournament</label>
+                    <select name="tournament_id" id="tournament_id" class="form-select">
+                        <option value="">All Tournaments</option>
+                        {% for tournament in tournaments %}
+                        <option value="{{ tournament.id }}" {% if selected_tournament_id == tournament.id %}selected{% endif %}>
+                            {{ tournament.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="team_id" class="form-label">Team</label>
+                    <select name="team_id" id="team_id" class="form-select">
+                        <option value="">All Teams</option>
+                        {% for team in teams %}
+                        <option value="{{ team.id }}" {% if selected_team_id == team.id %}selected{% endif %}>
+                            {{ team.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+                <div class="col-md-2">
+                    <a href="/player-stats" class="btn btn-outline-secondary w-100">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Player Stats Table -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Player Rankings</h5>
+            <span class="badge bg-primary">{{ player_stats|length }} Players</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Player</th>
+                            <th>Team</th>
+                            <th>Tournament</th>
+                            <th>Position</th>
+                            <th>Matches</th>
+                            <th>Goals</th>
+                            <th>Goals/Match</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in player_stats %}
+                        <tr onclick="window.location='/players/{{ stat.player.id if stat.player else '' }}'" class="clickable-row">
+                            <td>{{ loop.index }}</td>
+                            <td>{{ stat.player.name if stat.player else 'Unknown Player' }}</td>
+                            <td>{{ stat.player.team.name if stat.player and stat.player.team else 'Unknown Team' }}</td>
+                            <td>{{ stat.tournament.name if stat.tournament else 'Unknown Tournament' }}</td>
+                            <td>{{ stat.player.position if stat.player else 'Unknown' }}</td>
+                            <td>{{ stat.matches_played }}</td>
+                            <td>{{ stat.goals_scored }}</td>
+                            <td>
+                                {% if stat.matches_played > 0 %}
+                                    {{ "%.2f"|format(stat.goals_scored / stat.matches_played) }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center">No player statistics available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Summary -->
+    {% if player_stats %}
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Total Goals</h5>
+                    <p class="display-4">{{ player_stats|sum(attribute='goals_scored') }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Average Goals/Player</h5>
+                    <p class="display-4">
+                        {% if player_stats|length > 0 %}
+                            {{ "%.2f"|format(player_stats|sum(attribute='goals_scored') / player_stats|length) }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Players with Goals</h5>
+                    <p class="display-4">{{ player_stats|selectattr('goals_scored', 'gt', 0)|list|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

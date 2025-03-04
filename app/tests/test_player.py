@@ -1,8 +1,6 @@
 import pytest
-from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
-from app.main import app
 from app.tests.fixtures import create_test_team, create_test_player, create_test_tournament
 
 

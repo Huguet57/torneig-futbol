@@ -3,51 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Soccer Tournament Management System{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
-    {% block extra_css %}{% endblock %}
+    <title>Soccer Tournament Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Soccer Tournament Management System</h1>
-        </div>
-    </header>
-    
-    <nav>
-        <div class="container">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/tournaments">Tournaments</a></li>
-                <li><a href="/teams">Teams</a></li>
-                <li><a href="/phases">Phases</a></li>
-                <li><a href="/groups">Groups</a></li>
-                <li><a href="/matches">Matches</a></li>
-                <li><a href="/players">Players</a></li>
-                <li><a href="/goals">Goals</a></li>
-                <li><a href="/player-stats">Player Stats</a></li>
-            </ul>
-        </div>
-    </nav>
-    
-    <main class="container">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.type }}">
-                    {{ message.text }}
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <strong>Soccer Tournament</strong> Manager
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/tournaments">Tournaments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/teams">Teams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/matches">Matches</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/players">Players</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/stats">Statistics</a>
+                        </li>
+                    </ul>
                 </div>
-            {% endfor %}
-        {% endif %}
-        
+            </div>
+        </nav>
+    </header>
+
+    <main>
         {% block content %}{% endblock %}
     </main>
-    
-    <footer>
+
+    <footer class="footer mt-5 py-4">
         <div class="container">
-            <p>&copy; 2023 Soccer Tournament Management System</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2023 Soccer Tournament Management System</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>Version 1.0.0</p>
+                </div>
+            </div>
         </div>
     </footer>
-    
-    {% block scripts %}{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/main.js"></script>
 </body>
 </html> 

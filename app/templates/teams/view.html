@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Team Info -->
+        <div class="col-md-4">
+            <div class="card">
+                {% if team.logo_url %}
+                <img src="{{ team.logo_url }}" class="card-img-top" alt="{{ team.name }} logo">
+                {% endif %}
+                <div class="card-body">
+                    <h1 class="card-title">{{ team.name }}</h1>
+                    <p class="card-text">
+                        <strong>City:</strong> {{ team.city }}<br>
+                        <strong>Short Name:</strong> {{ team.short_name }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Team Stats -->
+        <div class="col-md-8">
+            <h2>Statistics</h2>
+            {% if team_stats %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tournament</th>
+                            <th>MP</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>GF</th>
+                            <th>GA</th>
+                            <th>GD</th>
+                            <th>CS</th>
+                            <th>Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stats in team_stats %}
+                        <tr>
+                            <td>{{ stats.tournament.name }}</td>
+                            <td>{{ stats.matches_played }}</td>
+                            <td>{{ stats.wins }}</td>
+                            <td>{{ stats.draws }}</td>
+                            <td>{{ stats.losses }}</td>
+                            <td>{{ stats.goals_for }}</td>
+                            <td>{{ stats.goals_against }}</td>
+                            <td>{{ stats.goal_difference }}</td>
+                            <td>{{ stats.clean_sheets }}</td>
+                            <td>{{ stats.points }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No statistics available.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Recent Matches -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h2>Recent Matches</h2>
+            {% if matches %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Tournament</th>
+                            <th>Home</th>
+                            <th>Score</th>
+                            <th>Away</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for match in matches %}
+                        <tr onclick="window.location='/matches/{{ match.id }}'" style="cursor: pointer;">
+                            <td>{{ match.date }}</td>
+                            <td>{{ match.tournament.name }}</td>
+                            <td>{{ match.home_team.name }}</td>
+                            <td>
+                                {% if match.status == "completed" %}
+                                {{ match.home_score }} - {{ match.away_score }}
+                                {% else %}
+                                vs
+                                {% endif %}
+                            </td>
+                            <td>{{ match.away_team.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No recent matches.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Players -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h2>Players</h2>
+            {% if players %}
+            <div class="row">
+                {% for player in players %}
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ player.name }}</h5>
+                            <a href="/players/{{ player.id }}" class="btn btn-sm btn-primary">View Stats</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No players registered.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 
