@@ -5,3 +5,5 @@ from app.schemas.group import GroupBase, GroupCreate, GroupUpdate, Group, GroupW
 from app.schemas.match import MatchBase, MatchCreate, MatchUpdate, Match, MatchResult
 from app.schemas.team_standing import TeamStanding
 from app.schemas.goal import GoalBase, GoalCreate, GoalUpdate, Goal, GoalType
+from app.schemas.player_stats import PlayerStatsBase, PlayerStatsCreate, PlayerStatsUpdate, PlayerStats
+from app.schemas.team_stats import TeamStatsBase, TeamStatsCreate, TeamStatsUpdate, TeamStats

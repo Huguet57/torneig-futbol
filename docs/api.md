@@ -113,6 +113,29 @@ This document outlines the API endpoints for the Soccer Tournament Management Sy
   - Includes matches played, wins, draws, losses, goals, and points
   - Sorted by points (descending) and goal difference
 
+#### Enhanced Team Statistics
+The following team statistics endpoints are now available:
+
+- `GET /team-stats/`: Get all team statistics
+  - Returns team statistics with optional filtering
+  - Supports tournament_id and team_id query parameters for filtering
+  - Includes pagination with skip and limit parameters
+
+- `GET /team-stats/tournament/{tournament_id}`: Get team rankings for a tournament
+  - Returns all teams in a tournament ranked by points and goal difference
+  - Includes detailed performance statistics for each team
+  - Provides a comprehensive tournament leaderboard
+
+- `GET /team-stats/team/{team_id}`: Get statistics for a specific team
+  - Returns statistics for a team across all tournaments
+  - Includes performance metrics like win percentage and goals per match
+  - Supports pagination with skip and limit parameters
+
+- `POST /team-stats/update/{team_id}/{tournament_id}`: Update team statistics
+  - Recalculates statistics for a team in a tournament based on match results
+  - Automatically updates all derived metrics and performance indicators
+  - Returns the updated statistics
+
 ### Player Statistics
 The following player statistics endpoints are now available:
 

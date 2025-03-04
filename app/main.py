@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from app.api import tournament, team, phase, group, match, standings, goal, player, player_stats
+from app.api import tournament, team, phase, group, match, standings, goal, player, player_stats, team_stats
 from app.ui import ui_router
 
 app = FastAPI(
@@ -36,6 +36,7 @@ app.include_router(standings.router, prefix="/api/standings", tags=["standings"]
 app.include_router(goal.router, prefix="/api/goals", tags=["goals"])
 app.include_router(player.router, prefix="/api/players", tags=["players"])
 app.include_router(player_stats.router, prefix="/api/player-stats", tags=["player-stats"])
+app.include_router(team_stats.router, prefix="/api/team-stats", tags=["team-stats"])
 
 # Include UI router
 app.include_router(ui_router.router)

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 
 from sqlalchemy.orm import Session
 
@@ -45,7 +45,7 @@ class CRUDMatch(CRUDBase[Match, MatchCreate, MatchUpdate]):
     ) -> List[Match]:
         """Get all completed matches."""
         return db.query(self.model).filter(
-            self.model.is_completed == True
+            self.model.status == "completed"
         ).order_by(self.model.date, self.model.id).offset(skip).limit(limit).all()
     
     def get_upcoming_matches(
@@ -53,8 +53,20 @@ class CRUDMatch(CRUDBase[Match, MatchCreate, MatchUpdate]):
     ) -> List[Match]:
         """Get all upcoming matches."""
         return db.query(self.model).filter(
-            self.model.is_completed == False
+            self.model.status == "scheduled"
         ).order_by(self.model.date, self.model.id).offset(skip).limit(limit).all()
+    
+    def get_all_by_fields(
+        self, db: Session, *, fields: Dict[str, Any], skip: int = 0, limit: int = 100
+    ) -> List[Match]:
+        """Get all matches matching the specified fields."""
+        query = db.query(self.model)
+        
+        for field, value in fields.items():
+            if hasattr(self.model, field):
+                query = query.filter(getattr(self.model, field) == value)
+        
+        return query.order_by(self.model.date, self.model.id).offset(skip).limit(limit).all()
 
 
 match = CRUDMatch(Match) 
