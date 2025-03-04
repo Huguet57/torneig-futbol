@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.db.database import get_db
 from app.models.player import Player as PlayerModel
+from app.models.tournament import Tournament as TournamentModel
 from app.schemas.player import Player, PlayerCreate, PlayerUpdate
 from app.schemas.player_stats import PlayerStats
 from app.api.crud_base import CRUDBase
@@ -11,6 +12,7 @@ from app import crud
 
 router = APIRouter()
 crud_player = CRUDBase[PlayerModel, PlayerCreate, PlayerUpdate](PlayerModel)
+crud_tournament = CRUDBase[TournamentModel, TournamentModel, TournamentModel](TournamentModel)
 
 
 @router.get("/", response_model=List[Player])
@@ -56,7 +58,7 @@ def delete_player(player_id: int, db: Session = Depends(get_db)):
     """
     Delete a player.
     """
-    return crud_player.remove(db, id=player_id)
+    return crud_player.delete(db, id=player_id)
 
 
 @router.get("/team/{team_id}", response_model=List[Player])
@@ -64,7 +66,7 @@ def get_players_by_team(team_id: int, skip: int = 0, limit: int = 100, db: Sessi
     """
     Get all players for a specific team.
     """
-    return crud_player.get_all_by_field(db, field="team_id", value=team_id, skip=skip, limit=limit)
+    return db.query(PlayerModel).filter(PlayerModel.team_id == team_id).offset(skip).limit(limit).all()
 
 
 @router.get("/{player_id}/stats", response_model=PlayerStats)
@@ -113,7 +115,7 @@ def get_player_stats(
                     tournament_id = matches[0].tournament_id
                 else:
                     # If no matches found, use the first tournament as fallback
-                    tournaments = crud.tournament.get_multi(db=db, limit=1)
+                    tournaments = crud_tournament.get_all(db=db, limit=1)
                     if not tournaments:
                         raise HTTPException(
                             status_code=404, 
@@ -122,7 +124,7 @@ def get_player_stats(
                     tournament_id = tournaments[0].id
             else:
                 # If player has no team, use the first tournament as fallback
-                tournaments = crud.tournament.get_multi(db=db, limit=1)
+                tournaments = crud_tournament.get_all(db=db, limit=1)
                 if not tournaments:
                     raise HTTPException(
                         status_code=404, 

@@ -5,6 +5,7 @@ from app.models.phase import Phase
 from app.models.group import Group
 from app.models.player import Player
 from app.models.match import Match
+from app.models.player_stats import PlayerStats
 
 
 def create_test_tournament(db):
@@ -72,6 +73,25 @@ def create_test_player(db, team_id):
     db.commit()
     db.refresh(player)
     return player
+
+
+def create_test_player_stats(db, player_id, tournament_id, matches_played=5, goals_scored=3, minutes_played=450):
+    """Create test player statistics"""
+    player_stats = PlayerStats(
+        player_id=player_id,
+        tournament_id=tournament_id,
+        matches_played=matches_played,
+        goals_scored=goals_scored,
+        minutes_played=minutes_played
+    )
+    
+    # Calculate derived statistics
+    player_stats.update_calculated_stats()
+    
+    db.add(player_stats)
+    db.commit()
+    db.refresh(player_stats)
+    return player_stats
 
 
 def add_team_to_group(db, team, group):

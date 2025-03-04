@@ -14,6 +14,20 @@ router = APIRouter()
 crud = CRUDBase(Goal)
 
 
+@router.get("/", response_model=List[GoalSchema])
+def get_goals(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    """Get all goals."""
+    goals = db.query(Goal).options(
+        joinedload(Goal.player),
+        joinedload(Goal.team)
+    ).offset(skip).limit(limit).all()
+    return goals
+
+
 @router.post("/", response_model=GoalSchema)
 def create_goal(goal: GoalCreate, db: Session = Depends(get_db)):
     """Create a new goal entry."""

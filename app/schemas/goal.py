@@ -12,7 +12,7 @@ class GoalType(str, Enum):
 
 class GoalBase(BaseModel):
     match_id: int
-    player_id: int
+    player_id: Optional[int] = None
     team_id: int
     minute: int = Field(..., ge=0, le=120)
     type: GoalType = GoalType.REGULAR

@@ -57,6 +57,10 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - For Pydantic V2+ models, use the newer model_config = {"from_attributes": True} syntax instead of the class Config approach
 - Replace deprecated orm_mode = True with from_attributes = True in Pydantic models to avoid deprecation warnings
 - Keep configuration styles consistent across all Pydantic models to avoid confusing warnings
+- When using pytest fixtures, ensure that custom fixtures don't override those from conftest.py to maintain consistent test database state
+- When a CRUD module is needed but not available in the app.crud namespace, check if there's a direct CRUD implementation in the API file (e.g., crud_tournament in tournament.py) and use that instead
+- In test assertions for API responses, be aware that some fields might be recalculated by the API and may not match the values you initially set
+- When fixing failing tests, first identify if the issue is with the test expectations or with the actual implementation
 
 # Scratchpad
 
@@ -103,6 +107,9 @@ Lessons learned during implementation:
 ### MVP 4 Planning - Backend Quality & Scalability
 
 [X] Review completed features and system architecture
+[X] Fix failing tests
+  [X] Fix player-stats API tests
+  [X] Fix player API tests
 [ ] Comprehensive Test Suite Enhancement
   [ ] Improve unit test coverage
     [ ] Identify modules with <90% coverage

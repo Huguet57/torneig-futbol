@@ -35,6 +35,10 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
         db.refresh(stats)
         return stats
     
+    def remove(self, db: Session, *, id: int) -> PlayerStats:
+        """Delete player statistics."""
+        return self.delete(db=db, id=id)
+    
     def update_stats_from_match(
         self,
         db: Session,

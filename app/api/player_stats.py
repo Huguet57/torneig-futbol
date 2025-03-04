@@ -1,13 +1,14 @@
 from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app import crud
 from app.db.database import get_db
 from app.schemas.player_stats import PlayerStats, PlayerStatsCreate, PlayerStatsUpdate
 from app.api.tournament import crud_tournament
 from app.api.player import crud_player
+from app.models.player_stats import PlayerStats as PlayerStatsModel
 
 router = APIRouter()
 
@@ -27,22 +28,35 @@ def get_player_stats(
     """
     if tournament_id and player_id:
         # Get stats for a specific player in a specific tournament
-        stats = crud.player_stats.get_by_player_tournament(
-            db=db, player_id=player_id, tournament_id=tournament_id
-        )
+        stats = db.query(PlayerStatsModel).options(
+            joinedload(PlayerStatsModel.player),
+            joinedload(PlayerStatsModel.tournament)
+        ).filter(
+            PlayerStatsModel.player_id == player_id,
+            PlayerStatsModel.tournament_id == tournament_id
+        ).first()
         return [stats] if stats else []
     elif tournament_id:
         # Get all player stats for a specific tournament
-        return crud.player_stats.get_by_tournament(
-            db=db, tournament_id=tournament_id, skip=skip, limit=limit
-        )
+        return db.query(PlayerStatsModel).options(
+            joinedload(PlayerStatsModel.player),
+            joinedload(PlayerStatsModel.tournament)
+        ).filter(
+            PlayerStatsModel.tournament_id == tournament_id
+        ).offset(skip).limit(limit).all()
     elif player_id:
         # Get all stats for a specific player across tournaments
-        return crud.player_stats.get_by_player(
-            db=db, player_id=player_id, skip=skip, limit=limit
-        )
+        return db.query(PlayerStatsModel).options(
+            joinedload(PlayerStatsModel.player),
+            joinedload(PlayerStatsModel.tournament)
+        ).filter(
+            PlayerStatsModel.player_id == player_id
+        ).offset(skip).limit(limit).all()
     # Get all player stats
-    return crud.player_stats.get_multi(db=db, skip=skip, limit=limit)
+    return db.query(PlayerStatsModel).options(
+        joinedload(PlayerStatsModel.player),
+        joinedload(PlayerStatsModel.tournament)
+    ).offset(skip).limit(limit).all()
 
 
 @router.post("/", response_model=PlayerStats)
@@ -80,7 +94,16 @@ def create_player_stats(
             detail=f"Statistics already exist for player {player_stats_in.player_id} in tournament {player_stats_in.tournament_id}",
         )
     
-    return crud.player_stats.create(db=db, obj_in=player_stats_in)
+    # Create the player stats
+    player_stats = crud.player_stats.create(db=db, obj_in=player_stats_in)
+    
+    # Ensure calculated fields are updated
+    player_stats.update_calculated_stats()
+    db.add(player_stats)
+    db.commit()
+    db.refresh(player_stats)
+    
+    return player_stats
 
 
 @router.put("/{stats_id}", response_model=PlayerStats)

@@ -14,6 +14,16 @@ router = APIRouter()
 crud = CRUDBase(Match)
 
 
+@router.get("/", response_model=List[MatchSchema])
+def get_matches(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    """Get all matches."""
+    return crud.get_all(db, skip=skip, limit=limit)
+
+
 @router.post("/", response_model=MatchSchema)
 def create_match(match: MatchCreate, db: Session = Depends(get_db)):
     """Create a new match."""

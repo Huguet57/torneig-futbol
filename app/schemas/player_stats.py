@@ -15,7 +15,7 @@ class PlayerStatsBase(BaseModel):
 class PlayerStats(PlayerStatsBase):
     """Schema for player statistics."""
     id: int
-    player_id: int
+    player_id: Optional[int] = None
     tournament_id: int
 
     model_config = {"from_attributes": True}
