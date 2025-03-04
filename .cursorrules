@@ -48,6 +48,15 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - When fixing database-related issues, check if the necessary database tables exist and consider using Base.metadata.create_all(bind=engine) to create tables directly from models
 - Always verify that auxiliary methods required by core functionality are implemented (such as get_all_by_fields in the Match CRUD module)
 - When running a FastAPI server, make sure to kill previous instances before starting a new one to avoid "Address already in use" errors
+- When converting script-based tests to pytest, ensure field names in assertions match the actual schema field names (e.g., 'goals_scored' vs 'goals')
+- In FastAPI projects with direct CRUD implementations in API files, make sure to import and use those implementations correctly in other modules
+- When a CRUD module is referenced but doesn't exist (e.g., crud.tournament), check if it's implemented directly in the API file and import it from there
+- Always check the schema definitions to understand the expected field names and structure when writing tests
+- Use pytest markers to organize tests by functionality for easier selective test execution
+- Ensure proper pytest configuration with conftest.py and pytest.ini for consistent test behavior
+- For Pydantic V2+ models, use the newer model_config = {"from_attributes": True} syntax instead of the class Config approach
+- Replace deprecated orm_mode = True with from_attributes = True in Pydantic models to avoid deprecation warnings
+- Keep configuration styles consistent across all Pydantic models to avoid confusing warnings
 
 # Scratchpad
 
@@ -56,6 +65,7 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 Previous task: Implementing MVP 1 - Tournament and Team Structure ✅
 Previous task: Implementing MVP 2 - Match Management ✅
 Current task: Implementing MVP 3 - Player Statistics ✅
+Current task: Converting script tests to pytest tests ✅
 
 [X] Set up project structure
   [X] Create directory structure
@@ -158,23 +168,49 @@ Current task: Implementing MVP 3 - Player Statistics ✅
     [X] Update API documentation with team statistics endpoints
     [X] Update README with new features
 
-Next: MVP 4 Planning:
-The Soccer Tournament Management System has now successfully completed MVP 3, with all functionality for tracking player and team statistics working correctly. 
+[X] Convert script tests to pytest tests
+  [X] Create pytest test files
+    [X] Create test_match_workflow.py
+    [X] Create test_goal_tracking.py
+    [X] Create test_player_stats.py
+    [X] Create test_team_stats.py
+  [X] Set up pytest configuration
+    [X] Create conftest.py with test markers
+    [X] Create pytest.ini with standard settings
+  [X] Update README with pytest instructions
+  [X] Fix test failures
+    [X] Fix goal validation test
+    [X] Fix player_stats API issues
+    [X] Update field names in test assertions
+  [X] Verify all tests pass
+    [X] Run all tests
+    [X] Run tests with markers
+    [X] Check test coverage
+  [X] Fix test warnings
+    [X] Update Pydantic models to use newer configuration style
+    [X] Replace deprecated orm_mode with from_attributes
 
-Key accomplishments in MVP 3:
+Next: MVP 4 Planning:
+The Soccer Tournament Management System has now successfully completed MVP 3, with all functionality for tracking player and team statistics working correctly. The test suite has been converted from script-based tests to pytest, providing better organization, isolation, and reporting.
+
+Key accomplishments:
 1. Implemented Goal model for tracking goals scored in matches
 2. Created PlayerStats system to track player performance metrics
 3. Enhanced team statistics with detailed performance metrics
 4. Implemented API endpoints for retrieving and updating statistics
-5. Developed test scripts to verify functionality
+5. Developed comprehensive test suite with pytest
 6. Fixed database and endpoint issues for reliable operation
+7. Eliminated test warnings by updating Pydantic models to use the latest configuration patterns
 
 Lessons learned during implementation:
 - Always verify database tables exist before testing new functionality
 - Ensure auxiliary methods required by core functionality are implemented
 - Check for proper imports and dependencies between modules
 - Validate that related database models are connected correctly
-- Kill previous server instances before starting new ones
+- Kill previous server instances before starting a new one to avoid "Address already in use" errors
+- Use pytest markers to organize tests by functionality
+- Ensure field names in test assertions match the actual schema field names
+- Keep Pydantic model configurations consistent and up-to-date with the latest version
 
 Next steps for MVP 4 - Advanced Features:
 [ ] Phase progression rules

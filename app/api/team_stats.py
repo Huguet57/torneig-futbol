@@ -1,11 +1,11 @@
 from typing import Any, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Path
+from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 
 from app import crud
 from app.db.database import get_db
-from app.schemas.team_stats import TeamStats, TeamStatsCreate, TeamStatsUpdate
+from app.schemas.team_stats import TeamStats
 
 router = APIRouter()
 

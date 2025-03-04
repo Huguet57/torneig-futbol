@@ -18,9 +18,7 @@ class PlayerStats(PlayerStatsBase):
     player_id: int
     tournament_id: int
 
-    class Config:
-        """Pydantic configuration."""
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # Properties to receive on creation

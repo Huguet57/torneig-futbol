@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 from app import crud
 from app.db.database import get_db
 from app.schemas.player_stats import PlayerStats, PlayerStatsCreate, PlayerStatsUpdate
+from app.api.tournament import crud_tournament
+from app.api.player import crud_player
 
 router = APIRouter()
 
@@ -53,7 +55,7 @@ def create_player_stats(
     Create new player statistics.
     """
     # Check if player exists
-    player = crud.player.get(db=db, id=player_stats_in.player_id)
+    player = crud_player.get(db=db, id=player_stats_in.player_id)
     if not player:
         raise HTTPException(
             status_code=404,
@@ -61,7 +63,7 @@ def create_player_stats(
         )
     
     # Check if tournament exists
-    tournament = crud.tournament.get(db=db, id=player_stats_in.tournament_id)
+    tournament = crud_tournament.get(db=db, id=player_stats_in.tournament_id)
     if not tournament:
         raise HTTPException(
             status_code=404,
@@ -159,7 +161,7 @@ def update_stats_from_goals(
     Otherwise, update stats for all players who scored in the tournament.
     """
     # Check if tournament exists
-    tournament = crud.tournament.get(db=db, id=tournament_id)
+    tournament = crud_tournament.get(db=db, id=tournament_id)
     if not tournament:
         raise HTTPException(
             status_code=404,
@@ -170,7 +172,7 @@ def update_stats_from_goals(
     
     if player_id:
         # Update stats for a specific player
-        player = crud.player.get(db=db, id=player_id)
+        player = crud_player.get(db=db, id=player_id)
         if not player:
             raise HTTPException(
                 status_code=404,

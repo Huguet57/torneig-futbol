@@ -37,7 +37,7 @@ def client(db):
         try:
             yield db
         finally:
-            db.close()
+            pass  # Don't close the db here, it will be closed by the db fixture
 
     app.dependency_overrides[get_db] = override_get_db
 
@@ -46,3 +46,16 @@ def client(db):
 
     # Remove the override after the test
     app.dependency_overrides.clear()
+
+
+def refresh_objects(db, *objects):
+    """Refresh multiple objects to avoid detached instance errors."""
+    for obj in objects:
+        if obj is not None:
+            db.refresh(obj)
+
+
+@pytest.fixture
+def refresh():
+    """Fixture to provide the refresh_objects function."""
+    return refresh_objects

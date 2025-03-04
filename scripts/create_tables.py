@@ -11,10 +11,6 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.db.database import Base, engine
-from app.models import (
-    Tournament, Phase, Group, Team, Player, Match,
-    Goal, PlayerStats, TeamStats
-)
 
 def create_tables():
     """Create all database tables."""

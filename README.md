@@ -81,33 +81,44 @@ The system supports the following core features:
 
 ### Testing
 
-The project includes test scripts to verify functionality:
+The project uses pytest for comprehensive test coverage:
 
-1. Match Management Workflow Test
-   ```bash
-   poetry run python scripts/test_match_workflow.py
-   ```
-   This script tests the complete match management workflow from tournament creation to standings calculation.
+```bash
+# Run all tests
+poetry run pytest
 
-2. Goal Tracking Test
-   ```bash
-   poetry run python scripts/test_goal_tracking.py
-   ```
-   This script tests the goal tracking functionality, including recording and retrieving goals by match, player, and team.
+# Run specific test categories using markers
+poetry run pytest -m match_workflow
+poetry run pytest -m goal_tracking
+poetry run pytest -m player_stats
+poetry run pytest -m team_stats
 
-3. Player Statistics Test
-   ```bash
-   poetry run python scripts/test_player_stats.py
-   ```
-   This script tests the player statistics functionality, calculating and retrieving player stats and tournament top scorers.
+# Run tests with verbose output
+poetry run pytest -v
 
-4. Team Statistics Test
-   ```bash
-   poetry run python scripts/test_team_stats.py
-   ```
-   This script tests the team statistics functionality, updating team stats from match results and retrieving team rankings.
+# Generate test coverage report
+poetry run pytest --cov=app
+```
 
-For more details on testing, see the [scripts README](scripts/README.md).
+The test suite includes:
+
+1. **Match Workflow Tests**
+   - Test the complete match management workflow from tournament creation to standings calculation
+   - Validate tournament structure creation, team assignment, match scheduling, and result tracking
+
+2. **Goal Tracking Tests**
+   - Test goal creation and retrieval functionality
+   - Validate goal statistics by match, player, and team
+
+3. **Player Statistics Tests**
+   - Test calculation of player performance metrics
+   - Validate tournament-specific statistics and top scorers functionality
+
+4. **Team Statistics Tests**
+   - Test team performance metrics and rankings
+   - Validate team statistics calculation based on match results
+
+Each test suite focuses on validating specific functionality while ensuring all components work together correctly.
 
 For more details on linting and code quality tools, see the [Linting Guide](LINTING.md).
 

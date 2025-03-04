@@ -13,15 +13,14 @@ This script populates the database with initial test data:
 import os
 import sys
 from datetime import date, timedelta
-from sqlalchemy.orm import Session
 
 # Add the project root to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.db.database import SessionLocal, engine, Base
+from app.db.database import SessionLocal
 from app.models import (
     Tournament, Phase, Group, Team, Player, Match,
-    Goal, PlayerStats, TeamStats
+    Goal, TeamStats
 )
 
 def init_db():
