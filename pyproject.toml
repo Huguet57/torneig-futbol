@@ -17,13 +17,47 @@ python-multipart = "^0.0.9"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 jinja2 = "^3.1.2"
 ruff = "^0.9.9"
+structlog = "^24.1.0"
+sentry-sdk = {extras = ["fastapi"], version = "^1.40.4"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.4.3"
 pytest-cov = "^4.1.0"
 httpx = "^0.26.0"
 pre-commit = "^3.5.0"
+mypy = "^1.8.0"
+types-python-jose = "^3.3.4"
+types-passlib = "^1.7.7"
+sqlalchemy[mypy] = "^2.0.27"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api" 
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+select = ["E", "F", "B", "I", "N", "UP", "PL", "RUF"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+
+[tool.mypy]
+plugins = [
+    "pydantic.mypy",
+    "sqlalchemy.ext.mypy.plugin",
+]
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false 

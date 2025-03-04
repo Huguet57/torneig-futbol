@@ -1,15 +1,43 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from pathlib import Path
+import structlog
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 
 from app.api import tournament, team, phase, group, match, standings, goal, player, player_stats, team_stats
 from app.ui import ui_router
+from app.db.database import engine, Base
+
+# Configure structured logging
+logger = structlog.get_logger()
+structlog.configure(
+    processors=[
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.processors.JSONRenderer(),
+    ],
+    wrapper_class=structlog.make_filtering_bound_logger(structlog.get_logger().level),
+    context_class=dict,
+    logger_factory=structlog.PrintLoggerFactory(),
+    cache_logger_on_first_use=True,
+)
+
+# Initialize Sentry
+sentry_sdk.init(
+    dsn="your-sentry-dsn",  # Replace with your Sentry DSN
+    integrations=[FastApiIntegration()],
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
 
 app = FastAPI(
     title="Soccer Tournament Management System",
-    description="API for managing soccer tournaments, teams, and matches",
-    version="0.1.0",
+    description="API for managing soccer tournaments, teams, matches, and statistics",
+    version="1.0.0",
 )
 
 # CORS middleware configuration
@@ -41,11 +69,37 @@ app.include_router(team_stats.router, prefix="/api/team-stats", tags=["team-stat
 # Include UI router
 app.include_router(ui_router.router)
 
+# Create database tables
+Base.metadata.create_all(bind=engine)
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    """Log all requests with structured logging."""
+    logger.info(
+        "request_started",
+        path=request.url.path,
+        method=request.method,
+        client=request.client.host if request.client else None,
+    )
+    response = await call_next(request)
+    logger.info(
+        "request_completed",
+        path=request.url.path,
+        method=request.method,
+        status_code=response.status_code,
+    )
+    return response
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint."""
+    return {
+        "status": "healthy",
+        "database": "connected",  # We could add actual DB health check here
+        "version": "1.0.0"
+    }
 
 @app.get("/")
 async def root():
-    return {
-        "message": "Welcome to the Soccer Tournament Management System API",
-        "docs_url": "/docs",
-        "redoc_url": "/redoc",
-    }
+    """Root endpoint that redirects to the UI home page."""
+    return {"message": "Welcome to the Soccer Tournament Management System API"}
