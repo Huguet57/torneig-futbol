@@ -1,0 +1,387 @@
+{
+  "info": {
+    "name": "Soccer Tournament Management API",
+    "description": "API collection for testing the Soccer Tournament Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"secure_password\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = JSON.parse(responseBody);",
+                  "pm.environment.set(\"access_token\", jsonData.access_token);",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has access token\", function () {",
+                  "    pm.expect(jsonData).to.have.property('access_token');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tournaments",
+      "item": [
+        {
+          "name": "Create Tournament",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tournaments/",
+              "host": ["{{base_url}}"],
+              "path": ["tournaments", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Summer Cup 2024\",\n  \"start_date\": \"2024-06-01\",\n  \"end_date\": \"2024-06-30\",\n  \"description\": \"Annual summer soccer tournament\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = JSON.parse(responseBody);",
+                  "pm.environment.set(\"tournament_id\", jsonData.id);",
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Tournament created successfully\", function () {",
+                  "    pm.expect(jsonData.name).to.eql(\"Summer Cup 2024\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Tournament",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/tournaments/{{tournament_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["tournaments", "{{tournament_id}}"]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Tournament details are correct\", function () {",
+                  "    var jsonData = JSON.parse(responseBody);",
+                  "    pm.expect(jsonData.id).to.eql(pm.environment.get(\"tournament_id\"));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "Create Team",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams/",
+              "host": ["{{base_url}}"],
+              "path": ["teams", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Red Dragons\",\n  \"city\": \"Barcelona\",\n  \"description\": \"Local amateur team\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = JSON.parse(responseBody);",
+                  "pm.environment.set(\"team_id\", jsonData.id);",
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Team created successfully\", function () {",
+                  "    pm.expect(jsonData.name).to.eql(\"Red Dragons\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Matches",
+      "item": [
+        {
+          "name": "Create Match",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/",
+              "host": ["{{base_url}}"],
+              "path": ["matches", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournament_id\": {{tournament_id}},\n  \"phase_id\": {{phase_id}},\n  \"group_id\": {{group_id}},\n  \"home_team_id\": {{team_id}},\n  \"away_team_id\": {{away_team_id}},\n  \"date\": \"2024-06-01T15:00:00Z\",\n  \"location\": \"Main Stadium\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = JSON.parse(responseBody);",
+                  "pm.environment.set(\"match_id\", jsonData.id);",
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Match created successfully\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"scheduled\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Match Result",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/{{match_id}}/result",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "{{match_id}}", "result"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"home_score\": 2,\n  \"away_score\": 1,\n  \"status\": \"completed\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Match result updated successfully\", function () {",
+                  "    var jsonData = JSON.parse(responseBody);",
+                  "    pm.expect(jsonData.status).to.eql(\"completed\");",
+                  "    pm.expect(jsonData.home_score).to.eql(2);",
+                  "    pm.expect(jsonData.away_score).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Goals",
+      "item": [
+        {
+          "name": "Record Goal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/goals/",
+              "host": ["{{base_url}}"],
+              "path": ["goals", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"match_id\": {{match_id}},\n  \"player_id\": {{player_id}},\n  \"team_id\": {{team_id}},\n  \"minute\": 35,\n  \"type\": \"regular\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = JSON.parse(responseBody);",
+                  "pm.environment.set(\"goal_id\", jsonData.id);",
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Goal recorded successfully\", function () {",
+                  "    pm.expect(jsonData.type).to.eql(\"regular\");",
+                  "    pm.expect(jsonData.minute).to.eql(35);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Statistics",
+      "item": [
+        {
+          "name": "Get Team Statistics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/team-stats/tournament/{{tournament_id}}/team/{{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["team-stats", "tournament", "{{tournament_id}}", "team", "{{team_id}}"]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Team statistics are correct\", function () {",
+                  "    var jsonData = JSON.parse(responseBody);",
+                  "    pm.expect(jsonData.team_id).to.eql(pm.environment.get(\"team_id\"));",
+                  "    pm.expect(jsonData.tournament_id).to.eql(pm.environment.get(\"tournament_id\"));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Player Statistics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/player-stats/tournament/{{tournament_id}}/player/{{player_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["player-stats", "tournament", "{{tournament_id}}", "player", "{{player_id}}"]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Player statistics are correct\", function () {",
+                  "    var jsonData = JSON.parse(responseBody);",
+                  "    pm.expect(jsonData.player_id).to.eql(pm.environment.get(\"player_id\"));",
+                  "    pm.expect(jsonData.tournament_id).to.eql(pm.environment.get(\"tournament_id\"));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+} 
