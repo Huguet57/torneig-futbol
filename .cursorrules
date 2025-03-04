@@ -69,6 +69,8 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - When updating imports, ensure that modules are imported from their correct locations, especially when CRUD operations are defined in API files rather than dedicated CRUD modules
 - For FastAPI applications using Starlette's TemplateResponse, use the new parameter order with request as the first parameter to avoid deprecation warnings
 - Check template file names and paths carefully when debugging template not found errors, as the actual file name might differ from what's referenced in the code
+- When implementing API endpoints that accept both URL path parameters and request body data, ensure that the request body schema matches the expected input, especially when using Pydantic models for validation
+- For team-related endpoints that handle players, ensure that the team_id is properly validated in both the URL path and request body to maintain data consistency
 
 # Scratchpad
 
@@ -132,11 +134,13 @@ Lessons learned during implementation:
   [X] Update TemplateResponse parameter order to avoid deprecation warnings
   [X] Fix import issues with CRUD modules
   [X] Update template references to match actual file names
-[ ] Comprehensive Test Suite Enhancement
-  [ ] Improve unit test coverage
-    [ ] Identify modules with <80% coverage
-    [ ] Add tests for untested edge cases and error conditions
-    [ ] Improve assertion quality and error messages
+[X] Comprehensive Test Suite Enhancement
+  [X] Add comprehensive standings calculation tests
+  [X] Add comprehensive API router configuration tests
+  [X] Add comprehensive team API tests with 100% coverage
+  [ ] Identify remaining modules with <80% coverage
+  [ ] Add tests for untested edge cases and error conditions
+  [ ] Improve assertion quality and error messages
   [ ] Set up continuous integration
     [ ] Configure GitHub Actions workflow
     [ ] Implement automated test runs with reports
