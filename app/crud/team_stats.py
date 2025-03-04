@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -10,17 +9,17 @@ from app.schemas.team_stats import TeamStatsCreate, TeamStatsUpdate
 class CRUDTeamStats(CRUDBase[TeamStats, TeamStatsCreate, TeamStatsUpdate]):
     """CRUD operations for team statistics."""
     
-    def get_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> List[TeamStats]:
+    def get_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> list[TeamStats]:
         """Get multiple team statistics with pagination."""
         return db.query(self.model).offset(skip).limit(limit).all()
     
-    def get_by_team_id(self, db: Session, team_id: int) -> Optional[TeamStats]:
+    def get_by_team_id(self, db: Session, team_id: int) -> TeamStats | None:
         """Get team statistics by team ID."""
         return db.query(TeamStats).filter(TeamStats.team_id == team_id).first()
     
     def get_by_team_tournament(
         self, db: Session, *, team_id: int, tournament_id: int
-    ) -> Optional[TeamStats]:
+    ) -> TeamStats | None:
         """Get team statistics for a specific tournament."""
         return db.query(TeamStats).filter(
             TeamStats.team_id == team_id,
@@ -29,7 +28,7 @@ class CRUDTeamStats(CRUDBase[TeamStats, TeamStatsCreate, TeamStatsUpdate]):
     
     def get_by_tournament(
         self, db: Session, *, tournament_id: int, skip: int = 0, limit: int = 100
-    ) -> List[TeamStats]:
+    ) -> list[TeamStats]:
         """Get all team statistics for a tournament."""
         return db.query(TeamStats).filter(
             TeamStats.tournament_id == tournament_id
@@ -61,7 +60,7 @@ class CRUDTeamStats(CRUDBase[TeamStats, TeamStatsCreate, TeamStatsUpdate]):
     
     def update_stats_from_matches(
         self, db: Session, *, team_id: int, tournament_id: int
-    ) -> Optional[TeamStats]:
+    ) -> TeamStats | None:
         """Update team stats based on match results in the tournament."""
         from app.crud.match import match
         
@@ -157,7 +156,7 @@ class CRUDTeamStats(CRUDBase[TeamStats, TeamStatsCreate, TeamStatsUpdate]):
     
     def get_tournament_teams_ranked(
         self, db: Session, *, tournament_id: int, limit: int = 100
-    ) -> List[TeamStats]:
+    ) -> list[TeamStats]:
         """Get teams in a tournament ranked by points and goal difference."""
         return db.query(TeamStats).filter(
             TeamStats.tournament_id == tournament_id

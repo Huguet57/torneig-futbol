@@ -1,9 +1,9 @@
-from app.tests.fixtures import (
-    create_test_tournament,
-    create_test_phase,
-    create_test_group,
-)
 from app.models.group import Group
+from app.tests.fixtures import (
+    create_test_group,
+    create_test_phase,
+    create_test_tournament,
+)
 
 
 def test_get_groups(client, db):

@@ -1,4 +1,3 @@
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -7,9 +6,9 @@ from pydantic import BaseModel
 class TeamBase(BaseModel):
     name: str
     short_name: str
-    logo_url: Optional[str] = None
-    city: Optional[str] = None
-    colors: Optional[str] = None
+    logo_url: str | None = None
+    city: str | None = None
+    colors: str | None = None
 
 
 # Model for creating a team
@@ -19,8 +18,8 @@ class TeamCreate(TeamBase):
 
 # Model for updating a team
 class TeamUpdate(TeamBase):
-    name: Optional[str] = None
-    short_name: Optional[str] = None
+    name: str | None = None
+    short_name: str | None = None
 
 
 # Model for team in database (includes ID)

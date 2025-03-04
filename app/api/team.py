@@ -1,19 +1,19 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.db.database import get_db
-from app.models.team import Team as TeamModel
-from app.models.player import Player as PlayerModel
-from app.schemas.team import Team, TeamCreate, TeamUpdate
-from app.schemas.player import Player, PlayerCreate
 from app.api.crud_base import CRUDBase
+from app.db.database import get_db
+from app.models.player import Player as PlayerModel
+from app.models.team import Team as TeamModel
+from app.schemas.player import Player, PlayerCreate
+from app.schemas.team import Team, TeamCreate, TeamUpdate
 
 router = APIRouter()
 crud = CRUDBase[TeamModel, TeamCreate, TeamUpdate](TeamModel)
 
 
-@router.get("/", response_model=List[Team])
+@router.get("/", response_model=list[Team])
 def get_teams(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve all teams.
@@ -82,7 +82,7 @@ def create_team_player(team_id: int, player: PlayerCreate, db: Session = Depends
     return db_player
 
 
-@router.get("/{team_id}/players/", response_model=List[Player])
+@router.get("/{team_id}/players/", response_model=list[Player])
 def get_team_players(team_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Get all players for a specific team.

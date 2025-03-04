@@ -1,16 +1,16 @@
-from typing import List, Optional, Dict, Any, Union
+from typing import Any
 
 from sqlalchemy.orm import Session
 
 from app.api.crud_base import CRUDBase
 from app.models.player_stats import PlayerStats
-from app.schemas.player_stats import PlayerStatsCreate, PlayerStatsBase
+from app.schemas.player_stats import PlayerStatsBase, PlayerStatsCreate
 
 
 class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
     """CRUD operations for player statistics."""
     
-    def get_by_player_id(self, db: Session, player_id: int) -> Optional[PlayerStats]:
+    def get_by_player_id(self, db: Session, player_id: int) -> PlayerStats | None:
         """Get player statistics by player ID."""
         return db.query(PlayerStats).filter(PlayerStats.player_id == player_id).first()
     
@@ -75,12 +75,13 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
         db: Session,
         tournament_id: int,
         limit: int = 5
-    ) -> List[PlayerStats]:
+    ) -> list[PlayerStats]:
         """Get top scorers for a tournament."""
+        from sqlalchemy import desc, func
+        from sqlalchemy.orm import joinedload
+
         from app.models.goal import Goal
         from app.models.match import Match
-        from sqlalchemy import func, desc
-        from sqlalchemy.orm import joinedload
         
         # Count goals by player in matches of the tournament
         goals_by_player = (
@@ -121,7 +122,7 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
     
     def get_by_player_tournament(
         self, db: Session, *, player_id: int, tournament_id: int
-    ) -> Optional[PlayerStats]:
+    ) -> PlayerStats | None:
         """Get player stats for a specific player in a specific tournament."""
         return db.query(self.model).filter(
             self.model.player_id == player_id,
@@ -130,7 +131,7 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
     
     def get_by_tournament(
         self, db: Session, *, tournament_id: int, skip: int = 0, limit: int = 100
-    ) -> List[PlayerStats]:
+    ) -> list[PlayerStats]:
         """Get all player stats for a specific tournament."""
         return db.query(self.model).filter(
             self.model.tournament_id == tournament_id
@@ -138,14 +139,14 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
     
     def get_by_player(
         self, db: Session, *, player_id: int, skip: int = 0, limit: int = 100
-    ) -> List[PlayerStats]:
+    ) -> list[PlayerStats]:
         """Get all stats for a specific player across tournaments."""
         return db.query(self.model).filter(
             self.model.player_id == player_id
         ).offset(skip).limit(limit).all()
     
     def create_or_update(
-        self, db: Session, *, obj_in: Union[PlayerStatsCreate, Dict[str, Any]]
+        self, db: Session, *, obj_in: PlayerStatsCreate | dict[str, Any]
     ) -> PlayerStats:
         """Create or update player stats for a tournament."""
         if isinstance(obj_in, dict):
@@ -165,7 +166,7 @@ class CRUDPlayerStats(CRUDBase[PlayerStats, PlayerStatsBase, PlayerStatsBase]):
     
     def update_stats_from_goals(
         self, db: Session, *, player_id: int, tournament_id: int
-    ) -> Optional[PlayerStats]:
+    ) -> PlayerStats | None:
         """Update player stats based on goals scored in the tournament."""
         from app.crud.goal import goal
         from app.crud.match import match

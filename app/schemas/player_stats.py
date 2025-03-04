@@ -1,6 +1,6 @@
-from typing import Optional
 
 from pydantic import BaseModel, Field
+
 from app.schemas.player import Player
 from app.schemas.tournament import Tournament
 
@@ -17,10 +17,10 @@ class PlayerStatsBase(BaseModel):
 class PlayerStats(PlayerStatsBase):
     """Schema for player statistics."""
     id: int
-    player_id: Optional[int] = None
+    player_id: int | None = None
     tournament_id: int
-    player: Optional[Player] = None
-    tournament: Optional[Tournament] = None
+    player: Player | None = None
+    tournament: Tournament | None = None
 
     model_config = {"from_attributes": True}
 
@@ -35,6 +35,6 @@ class PlayerStatsCreate(PlayerStatsBase):
 # Properties to receive on update
 class PlayerStatsUpdate(BaseModel):
     """Schema for updating player statistics."""
-    matches_played: Optional[int] = None
-    goals_scored: Optional[int] = None
-    minutes_played: Optional[int] = None 
+    matches_played: int | None = None
+    goals_scored: int | None = None
+    minutes_played: int | None = None 

@@ -1,11 +1,12 @@
-import pytest
 from datetime import date, timedelta
 
+import pytest
+
 from app.tests.fixtures import (
-    create_test_tournament,
-    create_test_phase,
     create_test_group,
-    create_test_team
+    create_test_phase,
+    create_test_team,
+    create_test_tournament,
 )
 
 
@@ -84,7 +85,7 @@ class TestMatchWorkflow:
             (3, 3),  # Team 3 vs Team 4: 3-3
         ]
         
-        for match, (home_score, away_score) in zip(matches, results):
+        for match, (home_score, away_score) in zip(matches, results, strict=False):
             result_data = {
                 "home_score": home_score,
                 "away_score": away_score,

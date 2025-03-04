@@ -1,7 +1,6 @@
-from typing import Optional, Literal
+from typing import Literal
 
 from pydantic import BaseModel
-
 
 # Phase types
 PhaseType = Literal["group", "elimination"]
@@ -21,9 +20,9 @@ class PhaseCreate(PhaseBase):
 
 # Model for updating a phase
 class PhaseUpdate(BaseModel):
-    name: Optional[str] = None
-    order: Optional[int] = None
-    type: Optional[PhaseType] = None
+    name: str | None = None
+    order: int | None = None
+    type: PhaseType | None = None
 
 
 # Model for phase in database (includes ID)

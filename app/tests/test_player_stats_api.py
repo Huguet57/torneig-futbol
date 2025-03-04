@@ -1,10 +1,10 @@
 
 from app.tests.fixtures import (
-    create_test_team, 
-    create_test_player, 
-    create_test_tournament,
+    create_test_group,
     create_test_phase,
-    create_test_group
+    create_test_player,
+    create_test_team,
+    create_test_tournament,
 )
 
 

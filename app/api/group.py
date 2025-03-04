@@ -1,18 +1,18 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 
+from app.api.crud_base import CRUDBase
 from app.db.database import get_db
 from app.models.group import Group as GroupModel
 from app.models.team import Team as TeamModel
 from app.schemas.group import Group, GroupCreate, GroupUpdate, TeamToGroup
-from app.api.crud_base import CRUDBase
 
 router = APIRouter()
 crud = CRUDBase[GroupModel, GroupCreate, GroupUpdate](GroupModel)
 
 
-@router.get("/", response_model=List[Group])
+@router.get("/", response_model=list[Group])
 def get_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve all groups.

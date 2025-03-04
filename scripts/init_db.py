@@ -13,17 +13,15 @@ This script populates the database with initial test data:
 import os
 import sys
 from datetime import date, timedelta
-from typing import List, NoReturn
+
 from sqlalchemy.orm import Session
 
 # Add the project root to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.db.database import SessionLocal
-from app.models import (
-    Tournament, Phase, Group, Team, Player, Match,
-    Goal, TeamStats
-)
+from app.models import Goal, Group, Match, Phase, Player, Team, TeamStats, Tournament
+
 
 def init_db() -> None:
     """Initialize the database with test data."""
@@ -76,7 +74,7 @@ def init_db() -> None:
         print(f"Created groups: {group_a.name}, {group_b.name}")
         
         # Create teams
-        teams: List[Team] = []
+        teams: list[Team] = []
         for i in range(1, 9):
             team = Team(
                 name=f"Team {i}",
@@ -117,7 +115,7 @@ def init_db() -> None:
         
         # Create matches within each group
         today = date.today()
-        matches: List[Match] = []
+        matches: list[Match] = []
         
         # Group A matches
         group_a_teams = teams[:4]

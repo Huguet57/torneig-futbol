@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Request, Depends, Form, HTTPException
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, RedirectResponse
-from sqlalchemy.orm import Session, joinedload
 from datetime import date, time
 from pathlib import Path
-from typing import Optional
 
-from app.db.database import get_db
-from app.models import Tournament, Team, Phase, Group, Match, Player, Goal, PlayerStats, TeamStats
+from fastapi import APIRouter, Depends, Form, HTTPException, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session, joinedload
+
 from app.core.standings import calculate_group_standings
+from app.db.database import get_db
+from app.models import Goal, Group, Match, Phase, Player, PlayerStats, Team, TeamStats, Tournament
 
 # Initialize templates
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -38,9 +38,9 @@ async def home(request: Request, db: Session = Depends(get_db)):
 @router.get("/matches", response_class=HTMLResponse)
 async def list_matches(
     request: Request,
-    tournament_id: Optional[int] = None,
-    phase_id: Optional[int] = None,
-    group_id: Optional[int] = None,
+    tournament_id: int | None = None,
+    phase_id: int | None = None,
+    group_id: int | None = None,
     db: Session = Depends(get_db),
 ):
     query = db.query(Match).options(
@@ -81,7 +81,7 @@ async def list_matches(
 @router.get("/matches/create", response_class=HTMLResponse)
 async def create_match_form(
     request: Request,
-    tournament_id: Optional[int] = None,
+    tournament_id: int | None = None,
     db: Session = Depends(get_db),
 ):
     tournaments = db.query(Tournament).all()
@@ -110,12 +110,12 @@ async def create_match(
     request: Request,
     tournament_id: int = Form(...),
     phase_id: int = Form(...),
-    group_id: Optional[int] = Form(None),
+    group_id: int | None = Form(None),
     home_team_id: int = Form(...),
     away_team_id: int = Form(...),
     date: date = Form(...),
-    time: Optional[time] = Form(None),
-    location: Optional[str] = Form(None),
+    time: time | None = Form(None),
+    location: str | None = Form(None),
     db: Session = Depends(get_db),
 ):
     match = Match(
@@ -318,8 +318,8 @@ async def create_tournament(
     year: int = Form(...),
     start_date: date = Form(...),
     end_date: date = Form(...),
-    description: Optional[str] = Form(None),
-    logo_url: Optional[str] = Form(None),
+    description: str | None = Form(None),
+    logo_url: str | None = Form(None),
     db: Session = Depends(get_db),
 ):
     tournament = Tournament(
@@ -374,7 +374,7 @@ async def view_tournament(
 @router.get("/players", response_class=HTMLResponse)
 async def list_players(
     request: Request,
-    team_id: Optional[int] = None,
+    team_id: int | None = None,
     db: Session = Depends(get_db),
 ):
     query = db.query(Player).options(
@@ -443,9 +443,9 @@ async def view_player(
 @router.get("/goals", response_class=HTMLResponse)
 async def goals_page(
     request: Request,
-    tournament_id: Optional[int] = None,
-    team_id: Optional[int] = None,
-    player_id: Optional[int] = None,
+    tournament_id: int | None = None,
+    team_id: int | None = None,
+    player_id: int | None = None,
     db: Session = Depends(get_db),
 ):
     """Goals page."""
@@ -490,8 +490,8 @@ async def goals_page(
 @router.get("/player-stats", response_class=HTMLResponse)
 async def player_stats_page(
     request: Request,
-    tournament_id: Optional[int] = None,
-    team_id: Optional[int] = None,
+    tournament_id: int | None = None,
+    team_id: int | None = None,
     db: Session = Depends(get_db),
 ):
     # Get all tournaments for filter
@@ -533,7 +533,7 @@ async def player_stats_page(
 @router.get("/teams", response_class=HTMLResponse)
 async def list_teams(
     request: Request,
-    tournament_id: Optional[int] = None,
+    tournament_id: int | None = None,
     db: Session = Depends(get_db),
 ):
     """List all teams or teams in a specific tournament."""
@@ -562,7 +562,7 @@ async def list_teams(
 async def view_team(
     request: Request,
     team_id: int,
-    tournament_id: Optional[int] = None,
+    tournament_id: int | None = None,
     db: Session = Depends(get_db),
 ):
     team = db.query(Team).filter(Team.id == team_id).first()
@@ -606,7 +606,7 @@ async def view_team(
 @router.get("/stats", response_class=HTMLResponse)
 async def stats_overview(
     request: Request,
-    tournament_id: Optional[int] = None,
+    tournament_id: int | None = None,
     db: Session = Depends(get_db),
 ):
     """Overview of tournament statistics."""

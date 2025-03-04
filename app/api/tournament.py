@@ -1,19 +1,19 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from app.db.database import get_db
-from app.models.tournament import Tournament as TournamentModel
-from app.schemas.tournament import Tournament, TournamentCreate, TournamentUpdate
-from app.schemas.player_stats import PlayerStats
 from app.api.crud_base import CRUDBase
 from app.crud import player_stats as crud_player_stats
+from app.db.database import get_db
+from app.models.tournament import Tournament as TournamentModel
+from app.schemas.player_stats import PlayerStats
+from app.schemas.tournament import Tournament, TournamentCreate, TournamentUpdate
 
 router = APIRouter()
 crud_tournament = CRUDBase[TournamentModel, TournamentCreate, TournamentUpdate](TournamentModel)
 
 
-@router.get("/", response_model=List[Tournament])
+@router.get("/", response_model=list[Tournament])
 def get_tournaments(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve all tournaments.
@@ -61,7 +61,7 @@ def delete_tournament(tournament_id: int, db: Session = Depends(get_db)):
     return crud_tournament.delete(db, id=tournament_id)
 
 
-@router.get("/{tournament_id}/top-scorers", response_model=List[PlayerStats])
+@router.get("/{tournament_id}/top-scorers", response_model=list[PlayerStats])
 def get_tournament_top_scorers(
     tournament_id: int, 
     limit: int = Query(5, ge=1, le=50, description="Number of top scorers to return"),

@@ -1,4 +1,4 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -35,7 +35,7 @@ def get_player_stats(player_id: int, db: Session = Depends(get_db)):
     return stats
 
 
-@router.get("/", response_model=List[Player])
+@router.get("/", response_model=list[Player])
 def get_players(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """Get all players."""
     players = crud_player.get_multi(db, skip=skip, limit=limit)

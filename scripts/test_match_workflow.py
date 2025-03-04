@@ -13,11 +13,12 @@ This script tests the entire match management workflow:
 Usage:
     poetry run python scripts/test_match_workflow.py
 """
-import sys
 import json
-import requests
+import sys
 from datetime import date, timedelta
-from typing import Dict, Any, List
+from typing import Any
+
+import requests
 
 # Base URL for the API
 BASE_URL = "http://localhost:8000/api"
@@ -41,7 +42,7 @@ def print_response(response: requests.Response, label: str = "Response") -> None
         print(response.text)
 
 
-def create_tournament() -> Dict[str, Any]:
+def create_tournament() -> dict[str, Any]:
     """Create a test tournament."""
     print_step("Creating tournament")
     
@@ -64,7 +65,7 @@ def create_tournament() -> Dict[str, Any]:
     return response.json()
 
 
-def create_phase(tournament_id: int) -> Dict[str, Any]:
+def create_phase(tournament_id: int) -> dict[str, Any]:
     """Create a test phase."""
     print_step("Creating phase")
     
@@ -85,7 +86,7 @@ def create_phase(tournament_id: int) -> Dict[str, Any]:
     return response.json()
 
 
-def create_group(phase_id: int) -> Dict[str, Any]:
+def create_group(phase_id: int) -> dict[str, Any]:
     """Create a test group."""
     print_step("Creating group")
     
@@ -104,7 +105,7 @@ def create_group(phase_id: int) -> Dict[str, Any]:
     return response.json()
 
 
-def create_team(name: str) -> Dict[str, Any]:
+def create_team(name: str) -> dict[str, Any]:
     """Create a test team."""
     team_data = {
         "name": name,
@@ -121,7 +122,7 @@ def create_team(name: str) -> Dict[str, Any]:
     return response.json()
 
 
-def create_teams() -> List[Dict[str, Any]]:
+def create_teams() -> list[dict[str, Any]]:
     """Create multiple test teams."""
     print_step("Creating teams")
     
@@ -134,7 +135,7 @@ def create_teams() -> List[Dict[str, Any]]:
     return teams
 
 
-def assign_teams_to_group(group_id: int, team_ids: List[int]) -> None:
+def assign_teams_to_group(group_id: int, team_ids: list[int]) -> None:
     """Assign teams to a group."""
     print_step("Assigning teams to group")
     
@@ -158,7 +159,7 @@ def create_match(
     home_team_id: int,
     away_team_id: int,
     match_date: date
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Create a test match."""
     match_data = {
         "tournament_id": tournament_id,
@@ -180,7 +181,7 @@ def create_match(
     return response.json()
 
 
-def create_matches(tournament_id: int, phase_id: int, group_id: int, team_ids: List[int]) -> List[Dict[str, Any]]:
+def create_matches(tournament_id: int, phase_id: int, group_id: int, team_ids: list[int]) -> list[dict[str, Any]]:
     """Create matches between all teams in the group."""
     print_step("Creating matches")
     
@@ -205,7 +206,7 @@ def create_matches(tournament_id: int, phase_id: int, group_id: int, team_ids: L
     return matches
 
 
-def update_match_result(match_id: int, home_score: int, away_score: int) -> Dict[str, Any]:
+def update_match_result(match_id: int, home_score: int, away_score: int) -> dict[str, Any]:
     """Update a match result."""
     result_data = {
         "home_score": home_score,
@@ -223,7 +224,7 @@ def update_match_result(match_id: int, home_score: int, away_score: int) -> Dict
     return response.json()
 
 
-def update_match_results(matches: List[Dict[str, Any]]) -> None:
+def update_match_results(matches: list[dict[str, Any]]) -> None:
     """Update results for all matches."""
     print_step("Updating match results")
     
@@ -237,12 +238,12 @@ def update_match_results(matches: List[Dict[str, Any]]) -> None:
         (3, 3),  # Team 3 vs Team 4: 3-3
     ]
     
-    for match, (home_score, away_score) in zip(matches, results):
+    for match, (home_score, away_score) in zip(matches, results, strict=False):
         updated_match = update_match_result(match["id"], home_score, away_score)
         print(f"Updated match {updated_match['id']}: {updated_match['home_team']['name']} {home_score}-{away_score} {updated_match['away_team']['name']}")
 
 
-def get_group_standings(group_id: int) -> List[Dict[str, Any]]:
+def get_group_standings(group_id: int) -> list[dict[str, Any]]:
     """Get standings for a group."""
     print_step("Getting group standings")
     

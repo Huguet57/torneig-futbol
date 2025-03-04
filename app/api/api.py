@@ -1,16 +1,6 @@
 from fastapi import APIRouter
 
-from app.api import (
-    tournament,
-    team,
-    phase,
-    group,
-    match,
-    goal,
-    player,
-    player_stats,
-    team_stats
-)
+from app.api import goal, group, match, phase, player, player_stats, team, team_stats, tournament
 
 api_router = APIRouter()
 

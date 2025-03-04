@@ -1,4 +1,3 @@
-from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -15,7 +14,7 @@ class GroupCreate(GroupBase):
 
 # Model for updating a group
 class GroupUpdate(BaseModel):
-    name: Optional[str] = None
+    name: str | None = None
 
 
 # Model for team data in group response
@@ -31,7 +30,7 @@ class TeamInGroup(BaseModel):
 class Group(GroupBase):
     id: int
     phase_id: int
-    teams: List[TeamInGroup] = []
+    teams: list[TeamInGroup] = []
 
     model_config = {"from_attributes": True}  # For SQLAlchemy models compatibility
 

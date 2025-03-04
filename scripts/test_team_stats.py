@@ -8,8 +8,9 @@ This script tests:
 """
 import os
 import sys
-import requests
 from pprint import pprint
+
+import requests
 
 # Get base URL from environment or use default
 BASE_URL = os.environ.get("API_BASE_URL", "http://localhost:8000/api")

@@ -1,12 +1,12 @@
-from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
 class TeamStanding(BaseModel):
     team_id: int
     team_name: str
-    team_short_name: Optional[str] = None
-    team_logo_url: Optional[str] = None
+    team_short_name: str | None = None
+    team_logo_url: str | None = None
     matches_played: int = Field(default=0, ge=0)
     wins: int = Field(default=0, ge=0)
     draws: int = Field(default=0, ge=0)

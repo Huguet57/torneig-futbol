@@ -1,1 +1,1 @@
-from app.api import tournament, team, phase, group, match, standings, goal
+from app.api import goal, group, match, phase, standings, team, tournament

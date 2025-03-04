@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
@@ -10,13 +10,13 @@ from app.schemas.team_stats import TeamStats
 router = APIRouter()
 
 
-@router.get("/", response_model=List[TeamStats])
+@router.get("/", response_model=list[TeamStats])
 def get_team_stats(
     db: Session = Depends(get_db),
     skip: int = 0,
     limit: int = 100,
-    tournament_id: Optional[int] = None,
-    team_id: Optional[int] = None,
+    tournament_id: int | None = None,
+    team_id: int | None = None,
 ) -> Any:
     """
     Retrieve team statistics.
@@ -44,7 +44,7 @@ def get_team_stats(
     return crud.team_stats.get_multi(db=db, skip=skip, limit=limit)
 
 
-@router.get("/tournament/{tournament_id}", response_model=List[TeamStats])
+@router.get("/tournament/{tournament_id}", response_model=list[TeamStats])
 def get_tournament_team_stats(
     tournament_id: int = Path(...),
     limit: int = 100,
@@ -58,7 +58,7 @@ def get_tournament_team_stats(
     )
 
 
-@router.get("/team/{team_id}", response_model=List[TeamStats])
+@router.get("/team/{team_id}", response_model=list[TeamStats])
 def get_team_tournament_stats(
     team_id: int = Path(...),
     db: Session = Depends(get_db),

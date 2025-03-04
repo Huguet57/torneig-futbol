@@ -1,11 +1,11 @@
-from typing import Optional
+
 from pydantic import BaseModel
 
 
 class PlayerBase(BaseModel):
     name: str
-    number: Optional[int] = None
-    position: Optional[str] = None
+    number: int | None = None
+    position: str | None = None
     is_goalkeeper: bool = False
 
 
@@ -14,8 +14,8 @@ class PlayerCreate(PlayerBase):
 
 
 class PlayerUpdate(PlayerBase):
-    name: Optional[str] = None
-    team_id: Optional[int] = None
+    name: str | None = None
+    team_id: int | None = None
 
 
 class Player(PlayerBase):

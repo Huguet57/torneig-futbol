@@ -1,13 +1,15 @@
-from sqlalchemy.orm import Session
 from datetime import date
 
+from sqlalchemy.orm import Session
+
 from app.crud.player_stats import player_stats
+from app.models.goal import Goal
+from app.models.match import Match
 from app.models.player import Player
 from app.models.team import Team
 from app.models.tournament import Tournament
-from app.models.match import Match
-from app.models.goal import Goal
 from app.schemas.player_stats import PlayerStatsCreate
+
 
 class TestPlayerStatsCRUD:
     """Test the CRUD operations for player statistics."""

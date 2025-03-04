@@ -1,20 +1,19 @@
-from typing import List
-from fastapi import APIRouter, Depends, HTTPException, Query, Path
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy.exc import IntegrityError
 
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session, joinedload
+
+from app.api.crud_base import CRUDBase
 from app.db.database import get_db
 from app.models.goal import Goal
 from app.schemas.goal import Goal as GoalSchema
 from app.schemas.goal import GoalCreate, GoalUpdate
-from app.api.crud_base import CRUDBase
-
 
 router = APIRouter()
 crud = CRUDBase(Goal)
 
 
-@router.get("/", response_model=List[GoalSchema])
+@router.get("/", response_model=list[GoalSchema])
 def get_goals(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=100),
@@ -77,7 +76,7 @@ def delete_goal(goal_id: int = Path(...), db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/match/{match_id}", response_model=List[GoalSchema])
+@router.get("/match/{match_id}", response_model=list[GoalSchema])
 def list_goals_by_match(
     match_id: int = Path(...),
     skip: int = Query(0, ge=0),
@@ -93,7 +92,7 @@ def list_goals_by_match(
     return goals
 
 
-@router.get("/player/{player_id}", response_model=List[GoalSchema])
+@router.get("/player/{player_id}", response_model=list[GoalSchema])
 def list_goals_by_player(
     player_id: int = Path(...),
     skip: int = Query(0, ge=0),
@@ -109,7 +108,7 @@ def list_goals_by_player(
     return goals
 
 
-@router.get("/team/{team_id}", response_model=List[GoalSchema])
+@router.get("/team/{team_id}", response_model=list[GoalSchema])
 def list_goals_by_team(
     team_id: int = Path(...),
     skip: int = Query(0, ge=0),

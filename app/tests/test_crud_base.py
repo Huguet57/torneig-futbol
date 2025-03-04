@@ -199,7 +199,8 @@ class TestCRUDBase:
     def test_create_with_integrity_error(self, db: Session):
         """Test creating an object that violates database integrity."""
         # Create a test model with a unique constraint
-        from sqlalchemy import Column, Integer, String, UniqueConstraint
+        from sqlalchemy import Column, Integer, String
+
         from app.db.database import Base
         
         class TestModel(Base):
@@ -211,8 +212,9 @@ class TestCRUDBase:
         Base.metadata.create_all(bind=db.get_bind())
         
         # Create CRUD instance
-        from app.api.crud_base import CRUDBase
         from pydantic import BaseModel
+
+        from app.api.crud_base import CRUDBase
         
         class TestSchema(BaseModel):
             name: str
@@ -224,8 +226,8 @@ class TestCRUDBase:
         assert obj1.name == "test"
         
         # Try to create another object with the same name
-        from fastapi import HTTPException
         import pytest
+        from fastapi import HTTPException
         with pytest.raises(HTTPException) as exc_info:
             crud.create(db, obj_in=TestSchema(name="test"))
         assert exc_info.value.status_code == 400
@@ -233,7 +235,8 @@ class TestCRUDBase:
     def test_update_with_integrity_error(self, db: Session):
         """Test updating an object that would violate database integrity."""
         # Create a test model with a unique constraint
-        from sqlalchemy import Column, Integer, String, UniqueConstraint
+        from sqlalchemy import Column, Integer, String
+
         from app.db.database import Base
         
         class TestModel(Base):
@@ -245,8 +248,9 @@ class TestCRUDBase:
         Base.metadata.create_all(bind=db.get_bind())
         
         # Create CRUD instance
-        from app.api.crud_base import CRUDBase
         from pydantic import BaseModel
+
+        from app.api.crud_base import CRUDBase
         
         class TestSchema(BaseModel):
             name: str
@@ -258,8 +262,8 @@ class TestCRUDBase:
         obj2 = crud.create(db, obj_in=TestSchema(name="test2"))
         
         # Try to update obj2 with obj1's name
-        from fastapi import HTTPException
         import pytest
+        from fastapi import HTTPException
         with pytest.raises(HTTPException) as exc_info:
             crud.update(db, db_obj=obj2, obj_in=TestSchema(name="test1"))
         assert exc_info.value.status_code == 400
@@ -272,7 +276,8 @@ class TestCRUDBase:
         db.commit()
         
         # Create test models with foreign key constraint
-        from sqlalchemy import Column, Integer, String, ForeignKey
+        from sqlalchemy import Column, ForeignKey, Integer, String
+
         from app.db.database import Base
         
         class ParentModel(Base):
@@ -289,8 +294,9 @@ class TestCRUDBase:
         Base.metadata.create_all(bind=db.get_bind())
         
         # Create CRUD instance
-        from app.api.crud_base import CRUDBase
         from pydantic import BaseModel
+
+        from app.api.crud_base import CRUDBase
         
         class ParentSchema(BaseModel):
             name: str
@@ -304,8 +310,8 @@ class TestCRUDBase:
         db.commit()
         
         # Try to delete parent with existing child
-        from fastapi import HTTPException
         import pytest
+        from fastapi import HTTPException
         with pytest.raises(HTTPException) as exc_info:
             crud.delete(db, id=parent.id)
         assert exc_info.value.status_code == 400
@@ -314,6 +320,7 @@ class TestCRUDBase:
     def test_get_all_by_fields_with_invalid_field(self, db: Session):
         """Test get_all_by_fields with a non-existent field."""
         from sqlalchemy import Column, Integer, String
+
         from app.db.database import Base
         
         class TestModel(Base):
@@ -325,8 +332,9 @@ class TestCRUDBase:
         Base.metadata.create_all(bind=db.get_bind())
         
         # Create CRUD instance
-        from app.api.crud_base import CRUDBase
         from pydantic import BaseModel
+
+        from app.api.crud_base import CRUDBase
         
         class TestSchema(BaseModel):
             name: str
@@ -334,8 +342,8 @@ class TestCRUDBase:
         crud = CRUDBase[TestModel, TestSchema, TestSchema](TestModel)
         
         # Try to filter by non-existent field
-        from fastapi import HTTPException
         import pytest
+        from fastapi import HTTPException
         with pytest.raises(HTTPException) as exc_info:
             crud.get_all_by_fields(db, fields={"nonexistent": "value"})
         assert exc_info.value.status_code == 400 

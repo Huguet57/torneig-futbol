@@ -1,8 +1,7 @@
 from datetime import date, time
-from typing import Optional
 from enum import Enum
 
-from pydantic import BaseModel, field_validator, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class MatchStatus(str, Enum):
@@ -14,12 +13,12 @@ class MatchStatus(str, Enum):
 class MatchBase(BaseModel):
     tournament_id: int
     phase_id: int
-    group_id: Optional[int] = None
+    group_id: int | None = None
     home_team_id: int
     away_team_id: int
     date: date
-    time: Optional[time] = None
-    location: Optional[str] = None
+    time: time | None = None
+    location: str | None = None
 
 
 class MatchCreate(MatchBase):
@@ -27,16 +26,16 @@ class MatchCreate(MatchBase):
 
 
 class MatchUpdate(BaseModel):
-    phase_id: Optional[int] = None
-    group_id: Optional[int] = None
-    home_team_id: Optional[int] = None
-    away_team_id: Optional[int] = None
-    date: Optional[date] = None
-    time: Optional[time] = None
-    location: Optional[str] = None
-    home_score: Optional[int] = None
-    away_score: Optional[int] = None
-    status: Optional[MatchStatus] = None
+    phase_id: int | None = None
+    group_id: int | None = None
+    home_team_id: int | None = None
+    away_team_id: int | None = None
+    date: date | None = None
+    time: time | None = None
+    location: str | None = None
+    home_score: int | None = None
+    away_score: int | None = None
+    status: MatchStatus | None = None
 
 
 class MatchResult(BaseModel):
@@ -54,18 +53,18 @@ class MatchResult(BaseModel):
 class TeamBase(BaseModel):
     id: int
     name: str
-    short_name: Optional[str] = None
-    logo_url: Optional[str] = None
+    short_name: str | None = None
+    logo_url: str | None = None
 
     model_config = {"from_attributes": True}
 
 
 class Match(MatchBase):
     id: int
-    home_score: Optional[int] = None
-    away_score: Optional[int] = None
+    home_score: int | None = None
+    away_score: int | None = None
     status: MatchStatus = MatchStatus.SCHEDULED
-    home_team: Optional[TeamBase] = None
-    away_team: Optional[TeamBase] = None
+    home_team: TeamBase | None = None
+    away_team: TeamBase | None = None
 
     model_config = {"from_attributes": True} 

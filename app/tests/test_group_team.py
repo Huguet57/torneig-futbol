@@ -1,11 +1,11 @@
-from app.tests.fixtures import (
-    create_test_tournament,
-    create_test_phase,
-    create_test_group,
-    create_test_team,
-    add_team_to_group,
-)
 from app.models.group import Group
+from app.tests.fixtures import (
+    add_team_to_group,
+    create_test_group,
+    create_test_phase,
+    create_test_team,
+    create_test_tournament,
+)
 
 
 def test_add_team_to_group(client, db):
@@ -75,7 +75,7 @@ def test_add_team_to_group_errors(client, db):
     team = create_test_team(db)
 
     # Test non-existent group
-    response = client.post(f"/api/groups/99999/teams", json={"team_id": team.id})
+    response = client.post("/api/groups/99999/teams", json={"team_id": team.id})
     assert response.status_code == 404
     assert response.json()["detail"] == "Group not found"
 

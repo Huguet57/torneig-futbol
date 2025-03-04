@@ -1,6 +1,7 @@
+from collections.abc import Generator
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base, Session
-from typing import Generator
+from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./torneig_futbol.db"
 # For PostgreSQL, use this instead:

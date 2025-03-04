@@ -1,5 +1,6 @@
 """Test module for API router configuration."""
 from fastapi import APIRouter
+
 from app.api.api import api_router
 
 

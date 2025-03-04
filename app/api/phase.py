@@ -1,17 +1,17 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.api.crud_base import CRUDBase
 from app.db.database import get_db
 from app.models.phase import Phase as PhaseModel
 from app.schemas.phase import Phase, PhaseCreate, PhaseUpdate
-from app.api.crud_base import CRUDBase
 
 router = APIRouter()
 crud = CRUDBase[PhaseModel, PhaseCreate, PhaseUpdate](PhaseModel)
 
 
-@router.get("/", response_model=List[Phase])
+@router.get("/", response_model=list[Phase])
 def get_phases(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve all phases.

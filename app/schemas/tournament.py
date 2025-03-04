@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -11,8 +10,8 @@ class TournamentBase(BaseModel):
     year: int
     start_date: date
     end_date: date
-    description: Optional[str] = None
-    logo_url: Optional[str] = None
+    description: str | None = None
+    logo_url: str | None = None
 
 
 # Model for creating a tournament
@@ -22,11 +21,11 @@ class TournamentCreate(TournamentBase):
 
 # Model for updating a tournament
 class TournamentUpdate(TournamentBase):
-    name: Optional[str] = None
-    edition: Optional[str] = None
-    year: Optional[int] = None
-    start_date: Optional[date] = None
-    end_date: Optional[date] = None
+    name: str | None = None
+    edition: str | None = None
+    year: int | None = None
+    start_date: date | None = None
+    end_date: date | None = None
 
 
 # Model for tournament in database (includes ID)

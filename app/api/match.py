@@ -1,20 +1,19 @@
-from typing import List
-from fastapi import APIRouter, Depends, HTTPException, Query, Path
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy.exc import IntegrityError
 
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session, joinedload
+
+from app.api.crud_base import CRUDBase
 from app.db.database import get_db
 from app.models.match import Match
 from app.schemas.match import Match as MatchSchema
-from app.schemas.match import MatchCreate, MatchUpdate, MatchResult
-from app.api.crud_base import CRUDBase
-
+from app.schemas.match import MatchCreate, MatchResult, MatchUpdate
 
 router = APIRouter()
 crud = CRUDBase(Match)
 
 
-@router.get("/", response_model=List[MatchSchema])
+@router.get("/", response_model=list[MatchSchema])
 def get_matches(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=100),
@@ -97,7 +96,7 @@ def update_match_result(
         raise HTTPException(status_code=400, detail="Invalid data for match result update")
 
 
-@router.get("/tournament/{tournament_id}", response_model=List[MatchSchema])
+@router.get("/tournament/{tournament_id}", response_model=list[MatchSchema])
 def list_matches_by_tournament(
     tournament_id: int = Path(...),
     skip: int = Query(0, ge=0),
@@ -115,7 +114,7 @@ def list_matches_by_tournament(
     return matches
 
 
-@router.get("/phase/{phase_id}", response_model=List[MatchSchema])
+@router.get("/phase/{phase_id}", response_model=list[MatchSchema])
 def list_matches_by_phase(
     phase_id: int = Path(...),
     skip: int = Query(0, ge=0),
@@ -133,7 +132,7 @@ def list_matches_by_phase(
     return matches
 
 
-@router.get("/group/{group_id}", response_model=List[MatchSchema])
+@router.get("/group/{group_id}", response_model=list[MatchSchema])
 def list_matches_by_group(
     group_id: int = Path(...),
     skip: int = Query(0, ge=0),

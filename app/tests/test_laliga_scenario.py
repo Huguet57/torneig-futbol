@@ -1,10 +1,8 @@
-import pytest
 from datetime import date, timedelta
 
-from app.tests.fixtures import (
-    create_test_team,
-    create_test_player
-)
+import pytest
+
+from app.tests.fixtures import create_test_player, create_test_team
 
 
 @pytest.mark.laliga_scenario

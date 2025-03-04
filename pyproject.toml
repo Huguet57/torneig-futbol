@@ -28,7 +28,7 @@ pre-commit = "^3.5.0"
 mypy = "^1.8.0"
 types-python-jose = "^3.3.4"
 types-passlib = "^1.7.7"
-sqlalchemy[mypy] = "^2.0.27"
+sqlalchemy = {extras = ["mypy"], version = "^2.0.27"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -38,7 +38,7 @@ build-backend = "poetry.core.masonry.api"
 line-length = 100
 target-version = "py312"
 select = ["E", "F", "B", "I", "N", "UP", "PL", "RUF"]
-ignore = []
+ignore = ["E501", "PLR2004"]
 
 [tool.ruff.format]
 quote-style = "double"

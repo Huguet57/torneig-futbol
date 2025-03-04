@@ -1,12 +1,13 @@
 """Test module for standings calculation functionality."""
 import pytest
 from sqlalchemy.orm import Session
+
 from app.core.standings import calculate_group_standings
-from app.models.tournament import Tournament
-from app.models.phase import Phase
 from app.models.group import Group
-from app.models.team import Team
 from app.models.match import Match
+from app.models.phase import Phase
+from app.models.team import Team
+from app.models.tournament import Tournament
 
 
 @pytest.fixture

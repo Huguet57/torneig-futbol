@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Any
 
 from sqlalchemy.orm import Session
 
@@ -10,7 +10,7 @@ from app.schemas.match import MatchCreate, MatchUpdate
 class CRUDMatch(CRUDBase[Match, MatchCreate, MatchUpdate]):
     def get_by_tournament(
         self, db: Session, *, tournament_id: int, skip: int = 0, limit: int = 100
-    ) -> List[Match]:
+    ) -> list[Match]:
         """Get all matches for a specific tournament."""
         return db.query(self.model).filter(
             self.model.tournament_id == tournament_id
@@ -18,7 +18,7 @@ class CRUDMatch(CRUDBase[Match, MatchCreate, MatchUpdate]):
     
     def get_by_phase(
         self, db: Session, *, phase_id: int, skip: int = 0, limit: int = 100
-    ) -> List[Match]:
+    ) -> list[Match]:
         """Get all matches for a specific phase."""
         return db.query(self.model).filter(
             self.model.phase_id == phase_id
@@ -26,7 +26,7 @@ class CRUDMatch(CRUDBase[Match, MatchCreate, MatchUpdate]):
     
     def get_by_group(
         self, db: Session, *, group_id: int, skip: int = 0, limit: int = 100
-    ) -> List[Match]:
+    ) -> list[Match]:
         """Get all matches for a specific group."""
         return db.query(self.model).filter(
             self.model.group_id == group_id
@@ -34,7 +34,7 @@ class CRUDMatch(CRUDBase[Match, MatchCreate, MatchUpdate]):
     
     def get_by_team(
         self, db: Session, *, team_id: int, skip: int = 0, limit: int = 100
-    ) -> List[Match]:
+    ) -> list[Match]:
         """Get all matches for a specific team."""
         return db.query(self.model).filter(
             (self.model.home_team_id == team_id) | (self.model.away_team_id == team_id)
@@ -42,7 +42,7 @@ class CRUDMatch(CRUDBase[Match, MatchCreate, MatchUpdate]):
     
     def get_completed_matches(
         self, db: Session, *, skip: int = 0, limit: int = 100
-    ) -> List[Match]:
+    ) -> list[Match]:
         """Get all completed matches."""
         return db.query(self.model).filter(
             self.model.status == "completed"
@@ -50,15 +50,15 @@ class CRUDMatch(CRUDBase[Match, MatchCreate, MatchUpdate]):
     
     def get_upcoming_matches(
         self, db: Session, *, skip: int = 0, limit: int = 100
-    ) -> List[Match]:
+    ) -> list[Match]:
         """Get all upcoming matches."""
         return db.query(self.model).filter(
             self.model.status == "scheduled"
         ).order_by(self.model.date, self.model.id).offset(skip).limit(limit).all()
     
     def get_all_by_fields(
-        self, db: Session, *, fields: Dict[str, Any], skip: int = 0, limit: int = 100
-    ) -> List[Match]:
+        self, db: Session, *, fields: dict[str, Any], skip: int = 0, limit: int = 100
+    ) -> list[Match]:
         """Get all matches matching the specified fields."""
         query = db.query(self.model)
         

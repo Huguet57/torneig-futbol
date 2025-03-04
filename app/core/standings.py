@@ -1,13 +1,14 @@
 """Module for calculating standings from match results."""
-from typing import List, Dict, Any
+from typing import Any
+
 from sqlalchemy.orm import Session
 
-from app.models.match import Match
 from app.models.group import Group
+from app.models.match import Match
 from app.schemas.team_standing import TeamStanding
 
 
-def calculate_group_standings(db: Session, group_id: int) -> List[TeamStanding]:
+def calculate_group_standings(db: Session, group_id: int) -> list[TeamStanding]:
     """
     Calculate standings for teams in a group based on match results.
     
@@ -24,7 +25,7 @@ def calculate_group_standings(db: Session, group_id: int) -> List[TeamStanding]:
         return []
     
     # Initialize standings dictionary
-    standings: Dict[int, Dict[str, Any]] = {}
+    standings: dict[int, dict[str, Any]] = {}
     for team in group.teams:
         standings[team.id] = {
             "team_id": team.id,

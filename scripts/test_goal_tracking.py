@@ -12,11 +12,12 @@ This script tests the goal tracking workflow:
 Usage:
     poetry run python scripts/test_goal_tracking.py
 """
-import sys
 import json
-import requests
+import sys
 from datetime import date, timedelta
-from typing import Dict, Any, List
+from typing import Any
+
+import requests
 
 # Base URL for the API
 BASE_URL = "http://localhost:8000/api"
@@ -40,7 +41,7 @@ def print_response(response: requests.Response, label: str = "Response") -> None
         print(response.text)
 
 
-def create_tournament() -> Dict[str, Any]:
+def create_tournament() -> dict[str, Any]:
     """Create a test tournament."""
     print_step("Creating tournament")
     
@@ -63,7 +64,7 @@ def create_tournament() -> Dict[str, Any]:
     return response.json()
 
 
-def create_phase(tournament_id: int) -> Dict[str, Any]:
+def create_phase(tournament_id: int) -> dict[str, Any]:
     """Create a test phase."""
     print_step("Creating phase")
     
@@ -87,7 +88,7 @@ def create_phase(tournament_id: int) -> Dict[str, Any]:
     return response.json()
 
 
-def create_group(phase_id: int) -> Dict[str, Any]:
+def create_group(phase_id: int) -> dict[str, Any]:
     """Create a test group."""
     print_step("Creating group")
     
@@ -109,7 +110,7 @@ def create_group(phase_id: int) -> Dict[str, Any]:
     return response.json()
 
 
-def create_team(name: str) -> Dict[str, Any]:
+def create_team(name: str) -> dict[str, Any]:
     """Create a test team."""
     team_data = {
         "name": name,
@@ -127,7 +128,7 @@ def create_team(name: str) -> Dict[str, Any]:
     return response.json()
 
 
-def create_player(team_id: int, name: str, number: int, is_goalkeeper: bool = False) -> Dict[str, Any]:
+def create_player(team_id: int, name: str, number: int, is_goalkeeper: bool = False) -> dict[str, Any]:
     """Create a test player."""
     player_data = {
         "name": name,
@@ -153,7 +154,7 @@ def create_match(
     group_id: int,
     home_team_id: int,
     away_team_id: int
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Create a test match."""
     print_step("Creating match")
     
@@ -177,7 +178,7 @@ def create_match(
     return response.json()
 
 
-def update_match_result(match_id: int, home_score: int, away_score: int) -> Dict[str, Any]:
+def update_match_result(match_id: int, home_score: int, away_score: int) -> dict[str, Any]:
     """Update a match result."""
     print_step("Updating match result")
     
@@ -197,7 +198,7 @@ def update_match_result(match_id: int, home_score: int, away_score: int) -> Dict
     return response.json()
 
 
-def create_goal(match_id: int, player_id: int, team_id: int, minute: int, goal_type: str = "regular") -> Dict[str, Any]:
+def create_goal(match_id: int, player_id: int, team_id: int, minute: int, goal_type: str = "regular") -> dict[str, Any]:
     """Create a goal."""
     goal_data = {
         "match_id": match_id,
@@ -216,7 +217,7 @@ def create_goal(match_id: int, player_id: int, team_id: int, minute: int, goal_t
     return response.json()
 
 
-def get_goals_by_match(match_id: int) -> List[Dict[str, Any]]:
+def get_goals_by_match(match_id: int) -> list[dict[str, Any]]:
     """Get all goals for a match."""
     print_step("Getting goals by match")
     
@@ -230,7 +231,7 @@ def get_goals_by_match(match_id: int) -> List[Dict[str, Any]]:
     return response.json()
 
 
-def get_goals_by_player(player_id: int) -> List[Dict[str, Any]]:
+def get_goals_by_player(player_id: int) -> list[dict[str, Any]]:
     """Get all goals for a player."""
     print_step("Getting goals by player")
     
@@ -244,7 +245,7 @@ def get_goals_by_player(player_id: int) -> List[Dict[str, Any]]:
     return response.json()
 
 
-def get_goals_by_team(team_id: int) -> List[Dict[str, Any]]:
+def get_goals_by_team(team_id: int) -> list[dict[str, Any]]:
     """Get all goals for a team."""
     print_step("Getting goals by team")
     

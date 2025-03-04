@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Table
+from sqlalchemy import Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
 
 from app.db.database import Base
-
 
 # Association table for many-to-many relationship between teams and groups
 team_group = Table(

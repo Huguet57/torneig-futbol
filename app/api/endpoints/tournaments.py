@@ -1,12 +1,12 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
-from app.crud.tournament import tournament as crud_tournament
 from app.crud.player_stats import player_stats as crud_player_stats
-from app.schemas.tournament import Tournament, TournamentCreate, TournamentUpdate
+from app.crud.tournament import tournament as crud_tournament
 from app.schemas.player_stats import PlayerStats
+from app.schemas.tournament import Tournament, TournamentCreate, TournamentUpdate
 
 router = APIRouter()
 
@@ -20,7 +20,7 @@ def get_tournament(tournament_id: int, db: Session = Depends(get_db)):
     return tournament
 
 
-@router.get("/{tournament_id}/top-scorers", response_model=List[PlayerStats])
+@router.get("/{tournament_id}/top-scorers", response_model=list[PlayerStats])
 def get_tournament_top_scorers(
     tournament_id: int,
     limit: int = 5,
@@ -34,7 +34,7 @@ def get_tournament_top_scorers(
     return crud_player_stats.get_tournament_top_scorers(db, tournament_id, limit)
 
 
-@router.get("/", response_model=List[Tournament])
+@router.get("/", response_model=list[Tournament])
 def get_tournaments(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """Get all tournaments."""
     tournaments = crud_tournament.get_multi(db, skip=skip, limit=limit)

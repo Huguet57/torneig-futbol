@@ -1,15 +1,26 @@
+from pathlib import Path
+
+import sentry_sdk
+import structlog
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from pathlib import Path
-import structlog
-import sentry_sdk
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 
-from app.api import tournament, team, phase, group, match, standings, goal, player, player_stats, team_stats
+from app.api import (
+    goal,
+    group,
+    match,
+    phase,
+    player,
+    player_stats,
+    standings,
+    team,
+    team_stats,
+    tournament,
+)
+from app.db.database import Base, engine
 from app.ui import ui_router
-from app.db.database import engine, Base
 
 # Configure structured logging
 logger = structlog.get_logger()

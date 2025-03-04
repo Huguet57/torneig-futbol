@@ -1,8 +1,9 @@
-from typing import Generic, TypeVar, Type, List, Optional, Dict, Any, Union
+from typing import Any, Generic, TypeVar
+
 from fastapi import HTTPException
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 from app.db.database import Base
 
@@ -12,16 +13,16 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
 class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
-    def __init__(self, model: Type[ModelType]):
+    def __init__(self, model: type[ModelType]):
         self.model = model
 
-    def get(self, db: Session, id: int) -> Optional[ModelType]:
+    def get(self, db: Session, id: int) -> ModelType | None:
         return db.query(self.model).filter(self.model.id == id).first()
 
-    def get_all(self, db: Session, skip: int = 0, limit: int = 100) -> List[ModelType]:
+    def get_all(self, db: Session, skip: int = 0, limit: int = 100) -> list[ModelType]:
         return db.query(self.model).offset(skip).limit(limit).all()
 
-    def get_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> List[ModelType]:
+    def get_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> list[ModelType]:
         """Get multiple records with pagination."""
         return db.query(self.model).offset(skip).limit(limit).all()
 
@@ -38,7 +39,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             raise HTTPException(status_code=400, detail=str(e))
 
     def update(
-        self, db: Session, *, db_obj: ModelType, obj_in: Union[UpdateSchemaType, Dict[str, Any]]
+        self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType | dict[str, Any]
     ) -> ModelType:
         try:
             if isinstance(obj_in, dict):
@@ -66,9 +67,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             return obj
         except IntegrityError as e:
             db.rollback()
-            raise HTTPException(status_code=400, detail=f"Cannot delete item due to existing references: {str(e)}")
+            raise HTTPException(status_code=400, detail=f"Cannot delete item due to existing references: {e!s}")
 
-    def get_all_by_fields(self, db: Session, *, fields: Dict[str, Any], skip: int = 0, limit: int = 100) -> List[ModelType]:
+    def get_all_by_fields(self, db: Session, *, fields: dict[str, Any], skip: int = 0, limit: int = 100) -> list[ModelType]:
         """Get all records that match the given field values."""
         query = db.query(self.model)
         for field, value in fields.items():
@@ -78,7 +79,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
                 raise HTTPException(status_code=400, detail=f"Invalid field: {field}")
         return query.offset(skip).limit(limit).all()
         
-    def get_one_by_fields(self, db: Session, *, fields: Dict[str, Any]) -> Optional[ModelType]:
+    def get_one_by_fields(self, db: Session, *, fields: dict[str, Any]) -> ModelType | None:
         """Get a single record that matches the given field values."""
         query = db.query(self.model)
         for field, value in fields.items():

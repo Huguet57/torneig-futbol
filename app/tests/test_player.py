@@ -1,8 +1,7 @@
 import pytest
 from sqlalchemy.orm import Session
 
-from app.tests.fixtures import create_test_team, create_test_player, create_test_tournament
-
+from app.tests.fixtures import create_test_player, create_test_team, create_test_tournament
 
 # @pytest.fixture
 # def client():

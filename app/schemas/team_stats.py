@@ -1,4 +1,3 @@
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -14,7 +13,7 @@ class TeamStatsBase(BaseModel):
     goal_difference: int = Field(default=0)
     clean_sheets: int = Field(default=0)
     points: int = Field(default=0)
-    position: Optional[int] = None
+    position: int | None = None
     win_percentage: float = Field(default=0.0)
     goals_per_match: float = Field(default=0.0)
     points_per_match: float = Field(default=0.0)
@@ -39,12 +38,12 @@ class TeamStatsCreate(TeamStatsBase):
 # Properties to receive on update
 class TeamStatsUpdate(BaseModel):
     """Schema for updating team statistics."""
-    matches_played: Optional[int] = None
-    wins: Optional[int] = None
-    draws: Optional[int] = None
-    losses: Optional[int] = None
-    goals_for: Optional[int] = None
-    goals_against: Optional[int] = None
-    clean_sheets: Optional[int] = None
-    points: Optional[int] = None
-    position: Optional[int] = None 
+    matches_played: int | None = None
+    wins: int | None = None
+    draws: int | None = None
+    losses: int | None = None
+    goals_for: int | None = None
+    goals_against: int | None = None
+    clean_sheets: int | None = None
+    points: int | None = None
+    position: int | None = None 

@@ -1,25 +1,25 @@
-from typing import Any, List, Optional
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, joinedload
 
 from app import crud
-from app.db.database import get_db
-from app.schemas.player_stats import PlayerStats, PlayerStatsCreate, PlayerStatsUpdate
-from app.api.tournament import crud_tournament
 from app.api.player import crud_player
+from app.api.tournament import crud_tournament
+from app.db.database import get_db
 from app.models.player_stats import PlayerStats as PlayerStatsModel
+from app.schemas.player_stats import PlayerStats, PlayerStatsCreate, PlayerStatsUpdate
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[PlayerStats])
+@router.get("/", response_model=list[PlayerStats])
 def get_player_stats(
     db: Session = Depends(get_db),
     skip: int = 0,
     limit: int = 100,
-    tournament_id: Optional[int] = None,
-    player_id: Optional[int] = None,
+    tournament_id: int | None = None,
+    player_id: int | None = None,
 ) -> Any:
     """
     Retrieve player statistics.
@@ -170,12 +170,12 @@ def delete_player_stats(
     return crud.player_stats.remove(db=db, id=stats_id)
 
 
-@router.post("/update-from-goals/", response_model=List[PlayerStats])
+@router.post("/update-from-goals/", response_model=list[PlayerStats])
 def update_stats_from_goals(
     *,
     db: Session = Depends(get_db),
     tournament_id: int = Query(..., description="Tournament ID to update stats for"),
-    player_id: Optional[int] = Query(None, description="Optional player ID to update stats for"),
+    player_id: int | None = Query(None, description="Optional player ID to update stats for"),
 ) -> Any:
     """
     Update player statistics based on goals scored in the tournament.
